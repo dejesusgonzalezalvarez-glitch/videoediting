@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>System Solar - Hook</title>
+  <style>
+    body { margin: 0; overflow: hidden; background: #000; }
+    #canvas { display: block; }
+  </style>
+</head>
+<body>
+  <canvas id="threejs-canvas"></canvas>
+  
+  <script type="module">
+    
+    
+    import * as THREE from '../../../node_modules/three/build/three.module.js';
+// Escena, cámara, renderer
+    const scene = new THREE.Scene();
+    scene.background = new THREE.Color(0x0a0a1a);
+    
+    const camera = new THREE.PerspectiveCamera(45, 1920/1080, 0.1, 1000);
+    camera.position.set(0, 2, 5);
+    
+    const renderer = new THREE.WebGLRenderer({ 
+      canvas: document.querySelector('#threejs-canvas'), 
+      antialias: true 
+    });
+    renderer.setSize(1920, 1080);
+    renderer.setPixelRatio(window.devicePixelRatio);
+    
+    // Luz ambiental suave
+    const ambientLight = new THREE.AmbientLight(0x2a2a4a, 0.5);
+    scene.add(ambientLight);
+    
+    // Luz direccional (sol simulado)
+    const dirLight = new THREE.DirectionalLight(0xffe066, 0.8);
+    dirLight.position.set(5, 5, 5);
+    scene.add(dirLight);
+    
+    // SOL - esfera grande con textura y partículas
+    const solGeometry = new THREE.SphereGeometry(2, 64, 64);
+    // Material simulando superficie solar con color dorado-naranja
+    const solMaterial = new THREE.MeshStandardMaterial({ 
+      color: 0xffa500,
+      emissive: 0xff4500,
+      emissiveIntensity: 0.3,
+      transparent: true,
+      opacity: 0.9
+    });
+    const sol = new THREE.Mesh(solGeometry, solMaterial);
+    sol.position.set(0, 0, 0);
+    scene.add(sol);
+    
+    // Anillo de partículas alrededor del Sol
+    const particleCount = 500;
+    const particleGeometry = new THREE.BufferGeometry();
+    const particlePositions = new Float32Array(particleCount * 3);
+    const particleSizes = new Float32Array(particleCount);
+    
+    for (let i = 0; i < particleCount; i++) {
+      const theta = Math.random() * Math.PI * 2;
+      const phi = Math.acos(2 * Math.random() - 1);
+      const radius = 2.5 + Math.random() * 1;
+      
+      particlePositions[i * 3] = radius * Math.sin(phi) * Math.cos(theta);
+      particlePositions[i * 3 + 1] = radius * Math.sin(phi) * Math.sin(theta);
+      particlePositions[i * 3 + 2] = radius * Math.cos(phi);
+      particleSizes[i] = 2 + Math.random() * 2;
+    }
+    
+    particleGeometry.setAttribute('position', new THREE.BufferAttribute(particlePositions, 3));
+    particleGeometry.setAttribute('size', new THREE.BufferAttribute(particleSizes, 1));
+    
+    const particleMaterial = new THREE.PointsMaterial({
+      color: 0xffd700,
+      size: 3,
+      transparent: true,
+      opacity: 0.8
+    });
+    
+    const particles = new THREE.Points(particleGeometry, particleMaterial);
+    scene.add(particles);
+    
+    // CAMARA: Zoom-in inicial, luego pull-back
+    let hookProgress = 0;
+    
+    // Planeta Venus con reloj (para el hook visual)
+    const venusGeometry = new THREE.SphereGeometry(0.3, 32, 32);
+    const venusMaterial = new THREE.MeshStandardMaterial({ 
+      color: 0xff4500,
+      roughness: 0.8,
+      metalness: 0.2
+    });
+    const venus = new THREE.Mesh(venusGeometry, venusMaterial);
+    venus.position.set(-3, 1, -2);
+    scene.add(venus);
+    
+    // Anillo alrededor de Venus para indicar "reloj"
+    const ringGeometry = new THREE.TorusGeometry(0.35, 0.08, 8, 32);
+    const ringMaterial = new THREE.MeshBasicMaterial({ 
+      color: 0xffff00,
+      transparent: true,
+      opacity: 0.5
+    });
+    const ring = new THREE.Mesh(ringGeometry, ringMaterial);
+    ring.position.copy(venus.position);
+    scene.add(ring);
+    
+    // ESTRELLAS de fondo (poco profundo)
+    const starCount = 200;
+    const starGeometry = new THREE.BufferGeometry();
+    const starPositions = new Float32Array(starCount * 3);
+    
+    for (let i = 0; i < starCount; i++) {
+      const radius = 20 + Math.random() * 30;
+      const theta = Math.random() * Math.PI * 2;
+      const phi = Math.acos(2 * Math.random() - 1);
+      
+      starPositions[i * 3] = radius * Math.sin(phi) * Math.cos(theta);
+      starPositions[i * 3 + 1] = radius * Math.sin(phi) * Math.sin(theta);
+      starPositions[i * 3 + 2] = radius * Math.cos(phi);
+    }
+    
+    starGeometry.setAttribute('position', new THREE.BufferAttribute(starPositions, 3));
+    const starMaterial = new THREE.PointsMaterial({
+      color: 0xffffff,
+      size: 1,
+      transparent: true,
+      opacity: 0.6
+    });
+    
+    const stars = new THREE.Points(starGeometry, starMaterial);
+    stars.position.set(0, 0, -15);
+    scene.add(stars);
+    
+    // Función determinista requerida por el studio
+    window.updateScene = function(timeInSeconds) {
+      // Lógica basada en tiempo total (0-90s)
+      hookProgress = timeInSeconds / 90; // 0 a 1 en todo el video
+      
+      // Animate Sol rotation
+      sol.rotation.y += 0.002;
+      sol.rotation.x += 0.001;
+      particles.rotation.y += 0.001;
+      
+      // Hook sequence: 0-3s es el segmento de hook
+      if (timeInSeconds < 3) {
+        // Zoom-in rápido al principio, luego pull-back lento
+        const hookT = timeInSeconds / 3; // 0 a 1 en el segmento de hook
+        const camZ = 5 - hookT * 3; // De 5 a 2 (zoom-in)
+        camera.position.z = camZ;
+        
+        // Rotar reloj Venus
+        ring.rotation.z += 0.1;
+        venus.rotation.y += 0.02;
+      } else {
+        // Después del hook, cámara se establece en posición de salida
+        camera.position.z = 8;
+      }
+      
+      // Progresso general 0-1
+      const progress = timeInSeconds / 90;
+      
+      return {
+        globalTime: timeInSeconds,
+        active: true,
+        scene: "hook",
+        localTime: timeInSeconds % 10,
+        progress: progress
+      };
+    };
+    
+    // Loop de animación
+    let hookFrame = 0;
+    function animate() {
+      requestAnimationFrame(animate);
+      
+      // Actualizar basado en window.updateScene
+      const sceneState = window.updateScene(hookFrame);
+      
+      // Rotación sutil de estrellas
+      stars.rotation.y += 0.0001;
+      
+      // Render
+      renderer.render(scene, camera);
+      
+      hookFrame = (hookFrame + 1) % 2700; // 90s × 30fps, pero renderizamos a 24fps luego
+    }
+    animate();
+  </script>
+</body>
+</html>

@@ -1,0 +1,370 @@
+[
+  {
+    "id": "s1_airport",
+    "set": "airport",
+    "f_in": 0,
+    "f_out": 150,
+    "transition_in": "none",
+    "mood": "airport_day",
+    "size": "WIDE",
+    "subj": "cooper",
+    "push": 1.0,
+    "az": -15,
+    "el": 10,
+    "az1": -10,
+    "el1": 15,
+    "camera": [
+      { "f": 0, "pos": { "anchor": "terminal_entrance", "off": [8, -12, 1.6] }, "target": { "anchor": "crowd_center", "off": [0, 0, 1.5] }, "lens": 28, "roll_deg": 0 },
+      { "f": 75, "pos": { "anchor": "ticket_counter", "off": [3, -5, 1.5] }, "target": { "anchor": "cooper_spot", "off": [0, 0, 1.6] }, "lens": 35, "roll_deg": 0 },
+      { "f": 150, "pos": { "anchor": "cooper_spot", "off": [0.5, -0.8, 1.7] }, "target": { "anchor": "cooper_spot", "off": [0, 0, 1.4] }, "lens": 85, "roll_deg": 0 }
+    ],
+    "actions": [
+      { "f": 10, "char": "cooper", "act": "place", "args": { "loc": { "anchor": "terminal_entrance", "off": [-6, 0, 0] }, "rot_z": 0.1 } },
+      { "f": 40, "char": "cooper", "act": "pose", "args": { "name": "walk" } },
+      { "f": 80, "char": "cooper", "act": "place", "args": { "loc": { "anchor": "cooper_spot", "off": [0, 0, 0] }, "rot_z": -0.15 } },
+      { "f": 90, "char": "cooper", "act": "pose", "args": { "name": "idle" } },
+      { "f": 100, "char": "cooper", "act": "pose", "args": { "name": "gesture_note" } },
+      { "f": 120, "char": "cooper", "act": "face", "args": { "name": "calm" } }
+    ],
+    "props": [
+      { "f": 0, "prop": "briefcase", "action": "appear", "args": { "at": { "anchor": "cooper_spot", "off": [0.3, 0.1, 0] } } },
+      { "f": 100, "prop": "ticket", "action": "appear", "args": { "at": { "anchor": "cooper_spot", "off": [0.2, 0.15, 1.4] } } }
+    ],
+    "fx": [
+      { "f": 0, "type": "rain", "at": { "anchor": "terminal_entrance", "off": [0, 0, 5] }, "args": { "intensity": 0.7 } },
+      { "f": 0, "type": "fog", "at": { "anchor": "tarmac", "off": [0, 0, 2] }, "args": { "density": 0.15 } }
+    ],
+    "text_overlay": { "f_in": 100, "f_out": 150, "text": "1971. UN HOMBRE SUBIÓ A UN AVIÓN...", "style": "cinematic_fade", "anchor": "bottom_center", "color": "amber" }
+  },
+  {
+    "id": "s2_takeoff",
+    "set": "exterior",
+    "f_in": 150,
+    "f_out": 300,
+    "transition_in": "whip",
+    "mood": "exterior_night",
+    "size": "XW",
+    "subj": "plane_exterior",
+    "push": 1.0,
+    "az": 45,
+    "el": 5,
+    "az1": 30,
+    "el1": 15,
+    "camera": [
+      { "f": 150, "pos": { "anchor": "runway_end", "off": [0, -80, 5] }, "target": { "anchor": "plane_exterior", "off": [0, 0, 3] }, "lens": 24, "roll_deg": 0 },
+      { "f": 225, "pos": { "anchor": "plane_exterior", "off": [15, -20, 8] }, "target": { "anchor": "plane_exterior", "off": [0, 0, 2] }, "lens": 35, "roll_deg": 0 },
+      { "f": 300, "pos": { "anchor": "plane_exterior", "off": [8, -10, 4] }, "target": { "anchor": "window_18f", "off": [0, 0, 0] }, "lens": 50, "roll_deg": 0 }
+    ],
+    "actions": [
+      { "f": 150, "char": "cooper", "act": "place", "args": { "loc": { "anchor": "window_18f", "off": [0, 0, 0] }, "rot_z": 3.14 } },
+      { "f": 160, "char": "cooper", "act": "pose", "args": { "name": "sit" } },
+      { "f": 200, "char": "cooper", "act": "face", "args": { "name": "focused" } }
+    ],
+    "props": [
+      { "f": 150, "prop": "plane_exterior", "action": "appear", "args": {} },
+      { "f": 210, "prop": "plane_interior_seats", "action": "appear", "args": {} }
+    ],
+    "fx": [
+      { "f": 150, "type": "propeller", "at": { "anchor": "plane_exterior", "off": [-8, 0, 1] }, "args": { "rpm": 2400 } },
+      { "f": 150, "type": "propeller", "at": { "anchor": "plane_exterior", "off": [8, 0, 1] }, "args": { "rpm": 2400 } },
+      { "f": 150, "type": "propeller", "at": { "anchor": "plane_exterior", "off": [0, -12, 1] }, "args": { "rpm": 2400 } },
+      { "f": 180, "type": "fog", "at": { "anchor": "cloud_layer", "off": [0, 0, 0] }, "args": { "density": 0.3 } }
+    ],
+    "text_overlay": { "f_in": 250, "f_out": 300, "text": "VUELO 305 · SEATTLE", "style": "cinematic_fade", "anchor": "bottom_center", "color": "cool_white" }
+  },
+  {
+    "id": "s3_note",
+    "set": "cabin",
+    "f_in": 300,
+    "f_out": 450,
+    "transition_in": "dissolve",
+    "mood": "cabin_day",
+    "size": "CU",
+    "subj": "cooper",
+    "push": 1.1,
+    "az": -5,
+    "el": 12,
+    "az1": 0,
+    "el1": 15,
+    "camera": [
+      { "f": 300, "pos": { "anchor": "aisle_18", "off": [0.8, -1.2, 1.1] }, "target": { "anchor": "tray_18f", "off": [0, 0, 0.8] }, "lens": 85, "roll_deg": 0 },
+      { "f": 375, "pos": { "anchor": "fa_position", "off": [0.5, -1, 1.5] }, "target": { "anchor": "fa_position", "off": [0, 0, 1.5] }, "lens": 105, "roll_deg": 0 },
+      { "f": 450, "pos": { "anchor": "cooper_spot", "off": [0.6, -0.8, 1.3] }, "target": { "anchor": "briefcase_spot", "off": [0, 0, 0.4] }, "lens": 85, "roll_deg": 0 }
+    ],
+    "actions": [
+      { "f": 300, "char": "cooper", "act": "place", "args": { "loc": { "anchor": "window_18f", "off": [0, 0, 0] }, "rot_z": 3.14 } },
+      { "f": 310, "char": "cooper", "act": "pose", "args": { "name": "sit" } },
+      { "f": 320, "char": "cooper", "act": "pose", "args": { "name": "gesture_note" } },
+      { "f": 340, "char": "cooper", "act": "hold", "args": { "prop": "note" } },
+      { "f": 360, "char": "cooper", "act": "hold", "args": { "prop": null } },
+      { "f": 400, "char": "cooper", "act": "pose", "args": { "name": "open_briefcase" } },
+      { "f": 420, "char": "cooper", "act": "face", "args": { "name": "mysterious" } }
+    ],
+    "props": [
+      { "f": 300, "prop": "note", "action": "appear", "args": { "at": { "anchor": "tray_18f", "off": [0, 0, 0.8] } } },
+      { "f": 340, "prop": "note", "action": "move", "args": { "to": { "anchor": "fa_position", "off": [0, 0, 1.5] } } },
+      { "f": 400, "prop": "briefcase", "action": "appear", "args": { "at": { "anchor": "briefcase_spot", "off": [0, 0, 0] } } }
+    ],
+    "fx": [],
+    "text_overlay": { "f_in": 380, "f_out": 450, "text": "TENGO UNA BOMBA.", "style": "speech_bubble", "anchor": "from_note", "color": "amber", "bubble": true }
+  },
+  {
+    "id": "s4_hijack",
+    "set": "cabin",
+    "f_in": 450,
+    "f_out": 600,
+    "transition_in": "travel",
+    "mood": "cabin_night",
+    "size": "MED",
+    "subj": "fa cooper",
+    "push": 1.0,
+    "az": 180,
+    "el": 8,
+    "az1": 170,
+    "el1": 10,
+    "camera": [
+      { "f": 450, "pos": { "anchor": "aisle_18", "off": [0, -4, 1.5] }, "target": { "anchor": "fa_position", "off": [0, 0, 1.5] }, "lens": 35, "roll_deg": 0 },
+      { "f": 525, "pos": { "anchor": "cockpit_door", "off": [0, -2, 1.4] }, "target": { "anchor": "pilot_seat", "off": [0, 0, 1.3] }, "lens": 50, "roll_deg": 0 },
+      { "f": 600, "pos": { "anchor": "cockpit_door", "off": [0.5, -3, 1.4] }, "target": { "anchor": "windshield_center", "off": [0, 0, 50] }, "lens": 35, "roll_deg": 0 }
+    ],
+    "actions": [
+      { "f": 450, "char": "cooper", "act": "pose", "args": { "name": "sit" } },
+      { "f": 450, "char": "cooper", "act": "face", "args": { "name": "calm" } },
+      { "f": 480, "char": "fa_proxy", "act": "place", "args": { "loc": { "anchor": "aisle_18", "off": [0, 0, 0] }, "rot_z": 0 } },
+      { "f": 480, "char": "fa_proxy", "act": "pose", "args": { "name": "walk" } },
+      { "f": 520, "char": "fa_proxy", "act": "place", "args": { "loc": { "anchor": "cockpit_door", "off": [0, 0, 0] }, "rot_z": 3.14 } },
+      { "f": 540, "char": "pilot_proxy", "act": "pose", "args": { "name": "read_note" } },
+      { "f": 560, "char": "copilot_proxy", "act": "pose", "args": { "name": "radio" } }
+    ],
+    "props": [
+      { "f": 450, "prop": "note", "action": "move", "args": { "to": { "anchor": "pilot_seat", "off": [0.2, 0, 1.1] } } }
+    ],
+    "fx": [],
+    "text_overlay": { "f_in": 520, "f_out": 600, "text": "EXIGIÓ 200.000 DÓLARES Y CUATRO PARACAÍDAS.", "style": "cinematic_fade", "anchor": "bottom_center", "color": "amber" }
+  },
+  {
+    "id": "s5_money",
+    "set": "exterior",
+    "f_in": 600,
+    "f_out": 750,
+    "transition_in": "whip",
+    "mood": "exterior_night",
+    "size": "WIDE",
+    "subj": "money_bag",
+    "push": 1.0,
+    "az": -90,
+    "el": 5,
+    "az1": -80,
+    "el1": 10,
+    "camera": [
+      { "f": 600, "pos": { "anchor": "tarmac_crew", "off": [0, -10, 1.5] }, "target": { "anchor": "tarmac_crew", "off": [0, 0, 1] }, "lens": 28, "roll_deg": 0 },
+      { "f": 675, "pos": { "anchor": "window_18f", "off": [0.5, -1.5, 1.3] }, "target": { "anchor": "seat_18e", "off": [0, 0, 0.5] }, "lens": 85, "roll_deg": 0 },
+      { "f": 750, "pos": { "anchor": "seat_18e", "off": [0.3, -0.4, 0.8] }, "target": { "anchor": "seat_18e", "off": [0, 0, 0.5] }, "lens": 105, "roll_deg": 0 }
+    ],
+    "actions": [
+      { "f": 600, "char": "ground_crew1", "act": "place", "args": { "loc": { "anchor": "tarmac_crew", "off": [-2, 0, 0] }, "rot_z": 0.5 } },
+      { "f": 600, "char": "ground_crew2", "act": "place", "args": { "loc": { "anchor": "tarmac_crew", "off": [2, 0, 0] }, "rot_z": -0.5 } },
+      { "f": 620, "char": "ground_crew1", "act": "pose", "args": { "name": "walk" } },
+      { "f": 620, "char": "ground_crew2", "act": "pose", "args": { "name": "walk" } },
+      { "f": 660, "char": "cooper", "act": "place", "args": { "loc": { "anchor": "window_18f", "off": [0, 0, 0] }, "rot_z": 3.14 } },
+      { "f": 670, "char": "cooper", "act": "pose", "args": { "name": "sit" } },
+      { "f": 690, "char": "cooper", "act": "pose", "args": { "name": "open_briefcase" } },
+      { "f": 710, "char": "cooper", "act": "face", "args": { "name": "focused" } }
+    ],
+    "props": [
+      { "f": 600, "prop": "money_bag", "action": "appear", "args": { "at": { "anchor": "tarmac_crew", "off": [0, 0, 0.5] } } },
+      { "f": 660, "prop": "money_bag", "action": "move", "args": { "to": { "anchor": "seat_18e", "off": [0, 0, 0.5] } } }
+    ],
+    "fx": [
+      { "f": 600, "type": "rain", "at": { "anchor": "tarmac_crew", "off": [0, 0, 5] }, "args": { "intensity": 0.8 } }
+    ],
+    "text_overlay": { "f_in": 680, "f_out": 750, "text": "LE ENTREGARON EL RESCATE.", "style": "cinematic_fade", "anchor": "bottom_center", "color": "amber" }
+  },
+  {
+    "id": "s6_second_takeoff",
+    "set": "exterior",
+    "f_in": 750,
+    "f_out": 900,
+    "transition_in": "travel",
+    "mood": "exterior_night",
+    "size": "XW",
+    "subj": "plane_exterior",
+    "push": 1.0,
+    "az": 60,
+    "el": 3,
+    "az1": 45,
+    "el1": 12,
+    "camera": [
+      { "f": 750, "pos": { "anchor": "runway_end", "off": [0, -100, 3] }, "target": { "anchor": "plane_exterior", "off": [0, 0, 3] }, "lens": 24, "roll_deg": 0 },
+      { "f": 825, "pos": { "anchor": "plane_exterior", "off": [20, -30, 15] }, "target": { "anchor": "plane_exterior", "off": [0, 0, 2] }, "lens": 35, "roll_deg": 0 },
+      { "f": 900, "pos": { "anchor": "plane_exterior", "off": [10, -15, 8] }, "target": { "anchor": "rear_door_area", "off": [0, 0, 2] }, "lens": 50, "roll_deg": 0 }
+    ],
+    "actions": [
+      { "f": 750, "char": "cooper", "act": "place", "args": { "loc": { "anchor": "window_18f", "off": [0, 0, 0] }, "rot_z": 3.14 } },
+      { "f": 760, "char": "cooper", "act": "pose", "args": { "name": "sit" } },
+      { "f": 860, "char": "cooper", "act": "pose", "args": { "name": "stand" } },
+      { "f": 870, "char": "cooper", "act": "place", "args": { "loc": { "anchor": "aisle_aft", "off": [0, 0, 0] }, "rot_z": 0 } },
+      { "f": 870, "char": "cooper", "act": "pose", "args": { "name": "walk_aft" } },
+      { "f": 890, "char": "cooper", "act": "hold", "args": { "prop": "briefcase" } }
+    ],
+    "props": [
+      { "f": 750, "prop": "plane_exterior", "action": "appear", "args": {} }
+    ],
+    "fx": [
+      { "f": 750, "type": "propeller", "at": { "anchor": "plane_exterior", "off": [-8, 0, 1] }, "args": { "rpm": 2600 } },
+      { "f": 750, "type": "propeller", "at": { "anchor": "plane_exterior", "off": [8, 0, 1] }, "args": { "rpm": 2600 } },
+      { "f": 750, "type": "propeller", "at": { "anchor": "plane_exterior", "off": [0, -12, 1] }, "args": { "rpm": 2600 } },
+      { "f": 780, "type": "fog", "at": { "anchor": "cloud_layer", "off": [0, 0, 0] }, "args": { "density": 0.5 } }
+    ],
+    "text_overlay": { "f_in": 820, "f_out": 900, "text": "ENTONCES, EL AVIÓN VOLVIÓ A DESPEGAR.", "style": "cinematic_fade", "anchor": "bottom_center", "color": "cool_white" }
+  },
+  {
+    "id": "s7_jump",
+    "set": "rear_door",
+    "f_in": 900,
+    "f_out": 1050,
+    "transition_in": "whip",
+    "mood": "rear_night",
+    "size": "MED",
+    "subj": "cooper",
+    "push": 1.2,
+    "az": 180,
+    "el": 5,
+    "az1": 170,
+    "el1": -20,
+    "camera": [
+      { "f": 900, "pos": { "anchor": "rear_door_center", "off": [0, -3, 1.7] }, "target": { "anchor": "rear_door_center", "off": [0, 0, 1.7] }, "lens": 35, "roll_deg": 0 },
+      { "f": 975, "pos": { "anchor": "rear_door_center", "off": [0, -2, 1.7] }, "target": { "anchor": "cooper_spot", "off": [0, 0, 1.7] }, "lens": 50, "roll_deg": 0 },
+      { "f": 1050, "pos": { "anchor": "stairs_bottom", "off": [0, 10, -5] }, "target": { "anchor": "cooper_spot", "off": [0, -20, -10] }, "lens": 28, "roll_deg": 0 }
+    ],
+    "actions": [
+      { "f": 900, "char": "cooper", "act": "place", "args": { "loc": { "anchor": "rear_door_center", "off": [0, -1, 0] }, "rot_z": 3.14 } },
+      { "f": 900, "char": "cooper", "act": "pose", "args": { "name": "idle" } },
+      { "f": 920, "char": "cooper", "act": "pose", "args": { "name": "hold_parachute" } },
+      { "f": 940, "char": "cooper", "act": "face", "args": { "name": "determined" } },
+      { "f": 980, "char": "cooper", "act": "pose", "args": { "name": "jump" } },
+      { "f": 1000, "char": "cooper", "act": "pose", "args": { "name": "skydive" } }
+    ],
+    "props": [
+      { "f": 900, "prop": "parachute", "action": "appear", "args": { "at": { "anchor": "rear_door_center", "off": [0, 0, 0] } } },
+      { "f": 1000, "prop": "parachute", "action": "swap", "args": { "to": "parachute_deployed" } }
+    ],
+    "fx": [
+      { "f": 900, "type": "wind", "at": { "anchor": "rear_door_center", "off": [0, 0, 1.5] }, "args": { "speed": 35 } },
+      { "f": 900, "type": "fog", "at": { "anchor": "rear_door_center", "off": [0, 5, 0] }, "args": { "density": 0.4 } },
+      { "f": 1000, "type": "parachute", "at": { "anchor": "cooper_spot", "off": [0, -5, -5] }, "args": { "deploy": true } }
+    ],
+    "text_overlay": { "f_in": 980, "f_out": 1050, "text": "SALTÓ EN MEDIO DE LA NOCHE.", "style": "cinematic_fade", "anchor": "bottom_center", "color": "amber" }
+  },
+  {
+    "id": "s8_forest",
+    "set": "forest",
+    "f_in": 1050,
+    "f_out": 1200,
+    "transition_in": "dissolve",
+    "mood": "forest_night",
+    "size": "WIDE",
+    "subj": "parachute_deployed",
+    "push": 1.0,
+    "az": -45,
+    "el": 30,
+    "az1": -30,
+    "el1": 5,
+    "camera": [
+      { "f": 1050, "pos": { "anchor": "forest_entry", "off": [0, -30, 25] }, "target": { "anchor": "forest_entry", "off": [0, 0, 5] }, "lens": 28, "roll_deg": 0 },
+      { "f": 1125, "pos": { "anchor": "clearing_center", "off": [0, -8, 2] }, "target": { "anchor": "clearing_center", "off": [0, 0, 1] }, "lens": 35, "roll_deg": 0 },
+      { "f": 1200, "pos": { "anchor": "clearing_center", "off": [0, -50, 30] }, "target": { "anchor": "clearing_center", "off": [0, 0, 0] }, "lens": 24, "roll_deg": 0 }
+    ],
+    "actions": [
+      { "f": 1050, "char": "cooper", "act": "place", "args": { "loc": { "anchor": "forest_entry", "off": [0, -20, 15] }, "rot_z": 0 } },
+      { "f": 1050, "char": "cooper", "act": "pose", "args": { "name": "skydive" } },
+      { "f": 1100, "char": "cooper", "act": "pose", "args": { "name": "skydive" } },
+      { "f": 1120, "char": "cooper", "act": "pose", "args": { "name": "idle" } }
+    ],
+    "props": [
+      { "f": 1050, "prop": "parachute_deployed", "action": "appear", "args": { "at": { "anchor": "forest_entry", "off": [0, -20, 15] } } },
+      { "f": 1120, "prop": "parachute_deployed", "action": "move", "args": { "to": { "anchor": "clearing_center", "off": [0, 0, 0] } } }
+    ],
+    "fx": [
+      { "f": 1050, "type": "rain", "at": { "anchor": "forest_entry", "off": [0, 0, 10] }, "args": { "intensity": 0.6 } },
+      { "f": 1050, "type": "fog", "at": { "anchor": "forest_entry", "off": [0, 0, 2] }, "args": { "density": 0.35 } },
+      { "f": 1050, "type": "wind", "at": { "anchor": "forest_entry", "off": [0, 0, 5] }, "args": { "speed": 8 } }
+    ],
+    "text_overlay": { "f_in": 1120, "f_out": 1200, "text": "NUNCA LO ENCONTRARON.", "style": "cinematic_fade", "anchor": "bottom_center", "color": "cool_white" }
+  },
+  {
+    "id": "s9_evidence",
+    "set": "evidence",
+    "f_in": 1200,
+    "f_out": 1350,
+    "transition_in": "whip",
+    "mood": "evidence_day",
+    "size": "MACRO",
+    "subj": "evidence_board",
+    "push": 1.0,
+    "az": 0,
+    "el": 10,
+    "az1": 10,
+    "el1": 15,
+    "camera": [
+      { "f": 1200, "pos": { "anchor": "evidence_board", "off": [0, -1.5, 1.6] }, "target": { "anchor": "evidence_board", "off": [0, 0, 1.6] }, "lens": 105, "roll_deg": 0 },
+      { "f": 1275, "pos": { "anchor": "evidence_map", "off": [0, -1.2, 1.4] }, "target": { "anchor": "evidence_map", "off": [0, 0, 1.0] }, "lens": 85, "roll_deg": 0 },
+      { "f": 1350, "pos": { "anchor": "evidence_money", "off": [0.3, -0.4, 1.0] }, "target": { "anchor": "evidence_money", "off": [0, 0, 0.2] }, "lens": 135, "roll_deg": 0 }
+    ],
+    "actions": [
+      { "f": 1200, "char": "agent_proxy", "act": "place", "args": { "loc": { "anchor": "evidence_board", "off": [-1, 0, 0] }, "rot_z": 0.2 } },
+      { "f": 1200, "char": "agent_proxy", "act": "pose", "args": { "name": "idle" } },
+      { "f": 1210, "char": "agent_proxy", "act": "pose", "args": { "name": "gesture_note" } },
+      { "f": 1280, "char": "agent_proxy", "act": "pose", "args": { "name": "peer" } }
+    ],
+    "props": [
+      { "f": 1200, "prop": "evidence_photos", "action": "appear", "args": { "at": { "anchor": "evidence_board", "off": [-0.5, 0, 1.4] } } },
+      { "f": 1230, "prop": "evidence_map", "action": "appear", "args": { "at": { "anchor": "evidence_map", "off": [0, 0, 0] } } },
+      { "f": 1260, "prop": "evidence_money", "action": "appear", "args": { "at": { "anchor": "evidence_money", "off": [0, 0, 0] } } },
+      { "f": 1290, "prop": "magnifying_glass", "action": "appear", "args": { "at": { "anchor": "evidence_money", "off": [0.1, 0.1, 0.1] } } },
+      { "f": 1320, "prop": "coffee_cup", "action": "appear", "args": { "at": { "anchor": "desk", "off": [0.3, 0.2, 0.7] } } },
+      { "f": 1320, "prop": "ashtray", "action": "appear", "args": { "at": { "anchor": "desk", "off": [-0.3, 0.2, 0.7] } } }
+    ],
+    "fx": [],
+    "text_overlay": { "f_in": 1300, "f_out": 1350, "text": "¿QUIÉN ERA REALMENTE?", "style": "cinematic_fade", "anchor": "bottom_center", "color": "amber" }
+  },
+  {
+    "id": "s10_finale",
+    "set": "finale",
+    "f_in": 1350,
+    "f_out": 1500,
+    "transition_in": "dissolve",
+    "mood": "finale_night",
+    "size": "WIDE",
+    "subj": "plane_exterior",
+    "push": 1.0,
+    "az": 20,
+    "el": 5,
+    "az1": 10,
+    "el1": 8,
+    "camera": [
+      { "f": 1350, "pos": { "anchor": "plane_exterior", "off": [15, -20, 8] }, "target": { "anchor": "plane_exterior", "off": [0, 0, 2] }, "lens": 35, "roll_deg": 0 },
+      { "f": 1425, "pos": { "anchor": "plane_exterior", "off": [30, -40, 10] }, "target": { "anchor": "window_18a", "off": [0, 0, 0] }, "lens": 50, "roll_deg": 0 },
+      { "f": 1500, "pos": { "anchor": "plane_exterior", "off": [50, -80, 15] }, "target": { "anchor": "plane_exterior", "off": [0, 0, 2] }, "lens": 28, "roll_deg": 0 }
+    ],
+    "actions": [
+      { "f": 1350, "char": "cooper", "act": "place", "args": { "loc": { "anchor": "window_18a", "off": [0, 0, 0] }, "rot_z": 3.14 } },
+      { "f": 1360, "char": "cooper", "act": "pose", "args": { "name": "sit" } },
+      { "f": 1400, "char": "cooper", "act": "face", "args": { "name": "mysterious" } }
+    ],
+    "props": [
+      { "f": 1350, "prop": "plane_exterior", "action": "appear", "args": {} },
+      { "f": 1410, "prop": "briefcase", "action": "appear", "args": { "at": { "anchor": "window_18a", "off": [0.2, 0, 0.4] } } }
+    ],
+    "fx": [
+      { "f": 1350, "type": "fog", "at": { "anchor": "cloud_layer", "off": [0, 0, 0] }, "args": { "density": 0.4 } },
+      { "f": 1350, "type": "propeller", "at": { "anchor": "plane_exterior", "off": [-8, 0, 1] }, "args": { "rpm": 2400 } },
+      { "f": 1350, "type": "propeller", "at": { "anchor": "plane_exterior", "off": [8, 0, 1] }, "args": { "rpm": 2400 } },
+      { "f": 1350, "type": "propeller", "at": { "anchor": "plane_exterior", "off": [0, -12, 1] }, "args": { "rpm": 2400 } }
+    ],
+    "text_overlay": [
+      { "f_in": 1420, "f_out": 1440, "text": "D. B. COOPER", "style": "title_card", "anchor": "center", "color": "amber", "size": "large" },
+      { "f_in": 1460, "f_out": 1500, "text": "EL MISTERIO SIGUE SIN RESOLVERSE.", "style": "title_card", "anchor": "center", "color": "cool_white", "size": "medium" }
+    ]
+  }
+]

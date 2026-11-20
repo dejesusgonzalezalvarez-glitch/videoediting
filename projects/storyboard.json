@@ -1,0 +1,132 @@
+{
+  "projectId": "sol_desaparece",
+  "title": "¿Qué pasaría si el Sol desaparece repentinamente?",
+  "format": "vertical_9_16",
+  "resolution": [1080, 1920],
+  "fps": 24,
+  "duration": 40,
+  "language": "es-ES",
+  "ttsVoice": "af_heart",
+  "scenes": [
+    {
+      "id": "escena1",
+      "start": 0,
+      "end": 5,
+      "duration": 5,
+      "type": "3d",
+      "camera": { "position": [0, 5, 10], "lookAt": [0, 0, -2], "move": "zoom_in" },
+      "objects": ["sol_silhouette", "tierra_orbita"],
+      "lighting": "cinematic_three_point",
+      "effects": ["particles_stars"],
+      "typography": { "text": "EL SOL DESAPARECE", "position": "center", "duration": 5 },
+      "audioCue": "narration_start",
+      "narrationText": "¿Qué pasaría si el Sol desapareciera repentinamente del cielo?",
+      "subtitleStart": 0,
+      "subtitleEnd": 5
+    },
+    {
+      "id": "escena2",
+      "start": 5,
+      "end": 10,
+      "duration": 5,
+      "type": "3d",
+      "camera": { "position": [0, 5, 10], "lookAt": [0, 0, -2], "move": "zoom_in_fast" },
+      "objects": ["tierra_silhouette"],
+      "lighting": "cinematic_three_point",
+      "effects": ["light_bending", "star_distortion"],
+      "typography": { "text": "GRABO GRAVEDAD", "position": "center", "duration": 5 },
+      "narrationText": "La Tierra continuaría su trayectoria en línea recta, alejada del Sol",
+      "subtitleStart": 5,
+      "subtitleEnd": 10
+    },
+    {
+      "id": "escena3",
+      "start": 10,
+      "end": 16,
+      "duration": 6,
+      "type": "3d",
+      "camera": { "position": [0, 4, 8], "lookAt": [0, 0, -2], "move": "push_in" },
+      "objects": ["tierra_silhouette", "fondo_estrellas"],
+      "lighting": "rim_light_violet",
+      "effects": ["horizon_glow", "crossing_distortion"],
+      "typography": { "text": "SIN GRAVEDAD", "position": "center", "duration": 6 },
+      "narrationText": "Sin la atracción solar, la Tierra se alejaría a velocidad constante hacia las estrellas más cercanas",
+      "subtitleStart": 10,
+      "subtitleEnd": 16
+    },
+    {
+      "id": "escena4",
+      "start": 16,
+      "end": 23,
+      "duration": 7,
+      "type": "physics",
+      "camera": { "position": [5, 5, 8], "lookAt": [0, 0, 0], "move": "orbit_around" },
+      "objects": ["reloj_tierra", "tierra_fading"],
+      "lighting": "warm_golden",
+      "effects": ["grid_curvature", "time_dilation"],
+      "typography": { "text": "EL TIEMPO SE ACCELERA", "position": "center", "duration": 7 },
+      "narrationText": "Para un observador en la Tierra, el tiempo seguiría pasando normalmente, pero el destino de la planeta sería sellado",
+      "subtitleStart": 16,
+      "subtitleEnd": 23
+    },
+    {
+      "id": "escena5",
+      "start": 23,
+      "end": 32,
+      "duration": 9,
+      "type": "physics",
+      "camera": { "position": [0, 5, 12], "lookAt": [0, 0, -4], "move": "push_in" },
+      "objects": ["raya_stretching", "tidal_forces_visual"],
+      "lighting": "dramatic_red_orange",
+      "effects": ["spaghettification", "gravity_gradient"],
+      "typography": { "text": "RUTA AL INTERSTELAR", "position": "center", "duration": 9 },
+      "narrationText": "Sin el Sol, la Tierra convertirse en un planeta errante, vagando por la galaxia hasta encontrar otro sistema estelar",
+      "subtitleStart": 23,
+      "subtitleEnd": 32
+    },
+    {
+      "id": "escena6",
+      "start": 32,
+      "end": 40,
+      "duration": 8,
+      "type": "3d",
+      "camera": { "position": [0, 6, 14], "lookAt": [0, 0, -2], "move": "slow_zoom_out" },
+      "objects": ["agujero_negro_lejanoso", "sol_fading"],
+      "lighting": "dark_ambient",
+      "effects": ["event_horizon_ring", "spacetime_tear"],
+      "typography": { "text": "FIN AL SISTEMA SOLAR", "position": "center", "duration": 8 },
+      "narrationText": "Mil millones de años después, quizás la vida se adaptara, pero el sistema solar tal como lo conocemos habría cesado existiendo",
+      "subtitleStart": 32,
+      "subtitleEnd": 40
+    }
+  ],
+  "narration": {
+    "voice": "af_heart",
+    "language": "es",
+    "style": "warm_expressive_natural",
+    "segments": [
+      { "start": 0, "end": 5, "text": "¿Qué pasaría si el Sol desapareciera repentinamente del cielo?" },
+      { "start": 5, "end": 10, "text": "La Tierra continuaría su trayectoria en línea recta, alejada del Sol" },
+      { "start": 10, "end": 16, "text": "Sin la atracción solar, la Tierra se alejaría a velocidad constante hacia las estrellas más cercanas" },
+      { "start": 16, "end": 23, "text": "Para un observador en la Tierra, el tiempo seguiría pasando normalmente, pero el destino del planeta estaría sellado" },
+      { "start": 23, "end": 32, "text": "Sin el Sol, la Tierra se convertiría en un planeta errante, vagando por la galaxia" },
+      { "start": 32, "end": 40, "text": "Mil millones de años después, quizás la vida se adaptara, pero el sistema solar habría cesado existiendo" }
+    ]
+  },
+  "subtitles": [
+    { "start": 0, "end": 5, "text": "¿Qué pasaría si el Sol desaparece del cielo?" },
+    { "start": 5, "end": 10, "text": "Tierra en trayectoria lineal, sin gravedad solar" },
+    { "start": 10, "end": 16, "text": "Sin gravedad, rumbo a las estrellas más cercanas" },
+    { "start": 16, "end": 23, "text": "El tiempo pasa normalmente, destino del planeta está sellado" },
+    { "start": 23, "end": 32, "text": "La Tierra vaga errante por la galaxia" },
+    { "start": 32, "end": 40, "text": "El sistema solar cesaría existiendo" }
+  ],
+  "artDirection": {
+    "palette": ["deep_black", "electric_blue", "orange", "violet"],
+    "style": "stylized_3d_educational",
+    "lighting": "volumetric_with_shadows",
+    "camera": "dynamic_with_orbits_and_zooms",
+    "format": "mobile_vertical_9_16",
+    "visualChangeInterval": "3-4_seconds"
+  }
+}

@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>System Solar - Gigantes Gaseosos</title>
+  <style>
+    body { margin: 0; overflow: hidden; background: #000; }
+    #canvas { display: block; }
+  </style>
+</head>
+<body>
+  <canvas id="threejs-canvas"></canvas>
+  
+  <script type="module">
+    
+    
+    import * as THREE from '../../../node_modules/three/build/three.module.js';
+// Escena, cámara, renderer
+    const scene = new THREE.Scene();
+    scene.background = new THREE.Color(0x020210);
+    
+    const camera = new THREE.PerspectiveCamera(50, 1920/1080, 0.1, 1000);
+    camera.position.set(0, 3, 20);
+    
+    const renderer = new THREE.WebGLRenderer({ 
+      canvas: document.querySelector('#threejs-canvas'), 
+      antialias: true 
+    });
+    renderer.setSize(1920, 1080);
+    renderer.setPixelRatio(window.devicePixelRatio);
+    
+    // Luz ambiental profunda
+    const ambientLight = new THREE.AmbientLight(0x050010, 0.3);
+    scene.add(ambientLight);
+    
+    // Luz direccional desde un ángulo dramático
+    const dirLight = new THREE.DirectionalLight(0xffffff, 0.6);
+    dirLight.position.set(15, 10, 12);
+    scene.add(dirLight);
+    
+    // ===== SOL EN FONDO (pequeño, referencia) =====
+    const solGeo = new THREE.SphereGeometry(1, 32, 32);
+    const solMat = new THREE.MeshStandardMaterial({ 
+      color: 0xffa500,
+      emissive: 0xff4500,
+      emissiveIntensity: 0.2
+    });
+    const sol = new THREE.Mesh(solGeo, solMat);
+    sol.position.set(-12, 0, -8);
+    scene.add(sol);
+    
+    // ===== LOS 4 GIGANTES GASEOSOS =====
+    const giantData = [
+      { name: "JÚPITER", size: 8, color: 0xffa500, ringsColor: 0xffd700, distance: 0, speed: 0.008 },
+      { name: "SATURNO", size: 7, color: 0xffd700, ringsColor: 0xffa500, distance: 0, speed: 0.006, hasRings: true },
+      { name: "URANO", size: 4, color: 0x4682b4, ringsColor: 0x87ceeb, distance: 0, speed: 0.005, hasRings: true, tilt: Math.PI / 2 },
+      { name: "NEPTUNO", size: 4, color: 0x000080, ringsColor: 0x191970, distance: 0, speed: 0.004, hasRings: true, tilt: Math.PI / 4 }
+    ];
+    
+    const giants = [];
+    
+    for (let i = 0; i < giantData.length; i++) {
+      const g = giantData[i];
+      
+      // Geografía grande del gigante
+      const geo = new THREE.SphereGeometry(g.size, 64, 64);
+      const mat = new THREE.MeshStandardMaterial({ 
+        color: g.color,
+        roughness: 0.6,
+        metalness: 0.1
+      });
+      const giant = new THREE.Mesh(geo, mat);
+      
+      // Posicionar en una línea a diferentes distancias para visibilidad
+      // Júpiter más cerca, Neptuno más lejos (escala visual)
+      const giantAngle = (i / giantData.length) * Math.PI;
+      const distMult = 1 - i * 0.15; // Júpiter cerca, Neptuno lejos conceptoualmente
+      giant.position.set(
+        Math.cos(giantAngle) * 8 * distMult,
+        0,
+        Math.sin(giantAngle) * 8 * distMult
+      );
+      
+      giant.userData.speed = g.speed;
+      giant.userData.name = g.name;
+      giant.userData.hasRings = g.hasRings;
+      giant.userData.ringsColor = g.ringsColor;
+      giant.userData.tilt = g.tilt || 0;
+      
+      // Efecto de bandas atmosféricas simples (stripe pattern)
+      if (g.name === "JÚPITER" || g.name === "SATURNO") {
+        // Agregamos un segundo material para simular bandas
+        const ringGeo = new THREE.TorusGeometry(g.size * 1.1, 0.3, 8, 32);
+        const ringMat = new THREE.MeshBasicMaterial({ 
+          color: g.ringsColor,
+          transparent: true,
+          opacity: g.hasRings ? 0.5 : 0.0
+        });
+        const rings = new THREE.Mesh(ringGeo, ringMat);
+        rings.rotation.x = Math.PI / 2;
+        if (g.tilt) rings.rotation.z = g.tilt;
+        scene.add(rings);
+        giant.userData.ringsMesh = rings;
+      }
+      
+      // Etiqueta de nombre
+      const labelGeo = new THREE.PlaneGeometry(g.name.length * 0.35 + 0.8, 0.4);
+      const labelMat = new THREE.MeshBasicMaterial({
+        color: 0x000000,
+        transparent: true,
+        opacity: 0.7
+      });
+      const labelBg = new THREE.Mesh(labelGeo, labelMat);
+      labelBg.position.set(giant.position.x, giant.position.y + g.size + 0.3, giant.position.z);
+      labelBg.rotation.x = -Math.PI / 2;
+      scene.add(labelBg);
+      
+      // Nombre en texto blanco sobre el negro
+      const labelFg = new THREE.Mesh(new THREE.PlaneGeometry(g.name.length * 0.32 + 0.7, 0.35), 
+        new THREE.MeshBasicMaterial({ 
+          color: 0xffff00,
+          transparent: true,
+          opacity: 0.9
+        }));
+      labelFg.position.copy(labelBg.position);
+      labelFg.rotation.x = -Math.PI / 2;
+      scene.add(labelFg);
+      
+      giants.push({ mesh: giant, labelBg: labelBg, labelFg: labelFg, data: g });
+    }
+    
+    // ===== SOL CENTRAL (referencia más grande) =====
+    const centralSunGeo = new THREE.SphereGeometry(2, 64, 64);
+    const centralSunMat = new THREE.ShaderMaterial({
+      uniforms: {
+        uTime: { value: 0 }
+      },
+      vertexShader: `
+        varying vec2 vUv;
+        varying float vProgress;
+        void main() {
+          vUv = uv;
+          vProgress = position.y * 0.5 + 0.5;
+          gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
+        }
+      `,
+      fragmentShader: `
+        uniform float uTime;
+        varying vec2 vUv;
+        varying float vProgress;
+        
+        void main() {
+          vec3 col1 = vec3(0xff4500);
+          vec3 col2 = vec3(0xff8c00);
+          float band = sin(uTime * 0.3 + vProgress * 6.28) * 0.5 + 0.5;
+          vec3 mixed = mix(col1, col2, band);
+          float edge = 1.0 - length(vUv - 0.5);
+          if (edge > 0.7) {
+            mixed = mix(mixed, vec3(0xffd700), (edge - 0.7) * 3.0);
+          }
+          gl_FragColor = vec4(mixed, 1.0);
+        }
+      `
+    });
+    const centralSun = new THREE.Mesh(centralSunGeo, centralSunMat);
+    centralSun.position.set(0, 0, 0);
+    scene.add(centralSun);
+    
+    // ===== ANIMATION: Órbitas y rotación de gigantes =====
+    let giantProgress = 0;
+    
+    window.updateScene = function(timeInSeconds) {
+      // Actualizar shader del sol central
+      centralSunMat.uniforms.uTime.value = timeInSeconds;
+      
+      // Rotar gigantes
+      for (let i = 0; i < giants.length; i++) {
+        const g = giants[i];
+        g.mesh.rotation.y += g.data.speed;
+        g.mesh.rotation.x += 0.002;
+        
+        // Rotar anillos si los tiene
+        if (g.userData && g.userData.ringsMesh) {
+          g.userData.ringsMesh.rotation.y += g.data.speed * 0.5;
+        }
+        
+        // Mover ligeramente en órbita alrededor del centro
+        const orbitAngle = timeInSeconds * g.data.speed;
+        g.mesh.position.x = Math.cos(orbitAngle) * 6;
+        g.mesh.position.z = Math.sin(orbitAngle) * 6;
+        
+        // Rotar etiquetas
+        if (g.labelFg) {
+          g.labelFg.position.copy(g.mesh.position);
+        }
+        if (g.labelBg) {
+          g.labelBg.position.copy(g.mesh.position);
+        }
+      }
+      
+      // Rotar sol de fondo
+      sol.rotation.y += 0.005;
+      
+      const progress = timeInSeconds / 90;
+      
+      return {
+        globalTime: timeInSeconds,
+        active: true,
+        scene: "gigantes",
+        localTime: timeInSeconds % 44,
+        progress: progress
+      };
+    };
+    
+    // Loop de animación
+    let giantFrame = 0;
+    function animate() {
+      requestAnimationFrame(animate);
+      
+      const sceneState = window.updateScene(giantFrame);
+      
+      renderer.render(scene, camera);
+      
+      giantFrame = (giantFrame + 1) % 2700;
+    }
+    animate();
+  </script>
+</body>
+</html>

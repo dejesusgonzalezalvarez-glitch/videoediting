@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>System Solar - Cierre y CTA</title>
+  <style>
+    body { margin: 0; overflow: hidden; background: #000; }
+    #canvas { display: block; }
+  </style>
+</head>
+<body>
+  <canvas id="threejs-canvas"></canvas>
+  
+  <script type="module">
+    
+    
+    import * as THREE from '../../../node_modules/three/build/three.module.js';
+// Escena, cámara, renderer
+    const scene = new THREE.Scene();
+    scene.background = new THREE.Color(0x0a0a20);
+    
+    const camera = new THREE.PerspectiveCamera(45, 1920/1080, 0.1, 1000);
+    camera.position.set(0, 2, 10);
+    
+    const renderer = new THREE.WebGLRenderer({ 
+      canvas: document.querySelector('#threejs-canvas'), 
+      antialias: true 
+    });
+    renderer.setSize(1920, 1080);
+    renderer.setPixelRatio(window.devicePixelRatio);
+    
+    // Luz ambiental
+    const ambientLight = new THREE.AmbientLight(0x101025, 0.4);
+    scene.add(ambientLight);
+    
+    // Luz direccional suave, como atardecer
+    const dirLight = new THREE.DirectionalLight(0xff8c42, 0.4);
+    dirLight.position.set(5, 3, 5);
+    scene.add(dirLight);
+    
+    // ===== VISTA PANORÁMICA COMPLETA DEL SISTEMA SOLAR =====
+    // Órbitas de todos los planetas (líneas sutiles)
+    const allOrbits = [];
+    
+    const planetOrbitData = [
+      { name: "MERCURY", radius: 3, color: 0x8b5a2b, width: 0.05 },
+      { name: "VENUS", radius: 4.5, color: 0xffd700, width: 0.05 },
+      { name: "EARTH", radius: 5.5, color: 0x4a90e2, width: 0.05 },
+      { name: "MARS", radius: 6.5, color: 0xb22222, width: 0.05 },
+      { name: "JÚPITER", radius: 8, color: 0xffa500, width: 0.03 },
+      { name: "SATURNO", radius: 9, color: 0xffd700, width: 0.03, rings: true },
+      { name: "URANO", radius: 10, color: 0x48d1cc, width: 0.03 },
+      { name: "NEPTUNO", radius: 11, color: 0x001aff, width: 0.03 }
+    ];
+    
+    for (let i = 0; i < allOrbits.length; i++) {
+      const od = allOrbitData[i];
+      const orbitGeo = new THREE.TorusGeometry(od.radius, od.width * 3, 8, 32);
+      const orbitMat = new THREE.MeshBasicMaterial({ 
+        color: od.color,
+        transparent: true,
+        opacity: 0.15
+      });
+      const orbit = new THREE.Mesh(orbitGeo, orbitMat);
+      orbit.rotation.x = Math.PI / 2;
+      scene.add(orbit);
+      allOrbits.push(orbit);
+    }
+    
+    // ===== SOL GRANDE EN EL CENTRO =====
+    const finalSunGeo = new THREE.SphereGeometry(5, 128, 128);
+    const finalSunMat = new THREE.ShaderMaterial({
+      uniforms: {
+        uTime: { value: 0 }
+      },
+      vertexShader: `
+        varying vec2 vUv;
+        varying float vProgress;
+        void main() {
+          vUv = uv;
+          vProgress = position.y * 0.5 + 0.5;
+          gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
+        }
+      `,
+      fragmentShader: `
+        uniform float uTime;
+        varying vec2 vUv;
+        varying float vProgress;
+        
+        void main() {
+          vec3 col1 = vec3(0xff27364a);
+          vec3 col2 = vec3(0xff6b90d8);
+          float band = sin(uTime * 0.2 + vProgress * 6.28 + 3.14) * 0.5 + 0.5;
+          vec3 mixed = mix(col1, col2, band);
+          
+          float edge = 1.0 - length(vUv - 0.5);
+          if (edge > 0.5) {
+            mixed = mix(mixed, vec3(0xffd700), (edge - 0.5) * 2.0);
+          }
+          
+          // Simular llamaradas en los bordes
+          float flare = 0.0;
+          for (int i = 0; i < 6; i++) {
+            vec2 spot = vUv - vec2(0.5);
+            float d = length(spot) - 0.3 - 0.05 * float(i);
+            flare += pow(max(0.0, 1.0 - d * d), 3.0) * 0.05 * float(i + 1);
+          }
+          
+          mixed += vec3(0.1) * flare;
+          
+          gl_FragColor = vec4(mixed, 1.0);
+        }
+      `
+    });
+    const finalSun = new THREE.Mesh(finalSunGeo, finalSunMat);
+    finalSun.position.set(0, 0, 0);
+    scene.add(finalSun);
+    
+    // ===== PLANETAS PEQUEÑOS ORBITANDO AL REDEDOR =====
+    // Representación artística del sistema solar completo
+    const systemPlanets = [
+      { name: "MERCURY", radius: 0.2, color: 0x8b5a2b, distance: 12, speed: 0.01 },
+      { name: "VENUS", radius: 0.45, color: 0xffd700, distance: 16, speed: 0.007 },
+      { name: "EARTH", radius: 0.5, color: 0x4a90e2, distance: 20, speed: 0.005 },
+      { name: "MARS", radius: 0.35, color: 0xb22222, distance: 24, speed: 0.006 },
+      { name: "JÚPITER", radius: 1.5, color: 0xffa500, distance: 28, speed: 0.003 },
+      { name: "SATURNO", radius: 1.3, color: 0xffd700, distance: 32, speed: 0.002, hasRings: true },
+      { name: "URANO", radius: 1.2, color: 0x48d1cc, distance: 36, speed: 0.0015 },
+      { name: "NEPTUNO", radius: 1.2, color: 0x001aff, distance: 40, speed: 0.001 }
+    ];
+    
+    const planetMeshes = [];
+    
+    for (let i = 0; i < systemPlanets.length; i++) {
+      const p = systemPlanets[i];
+      
+      const geo = new THREE.SphereGeometry(p.radius, 16, 16);
+      const mat = new THREE.MeshStandardMaterial({ color: p.color });
+      const planet = new THREE.Mesh(geo, mat);
+      
+      // Posicionar en órbita
+      const angle = (i / systemPlanets.length) * Math.PI * 2;
+      const x = Math.cos(angle) * p.distance;
+      const z = Math.sin(angle) * p.distance;
+      planet.position.set(x, 0, z);
+      
+      planet.userData.speed = p.speed;
+      planet.userData.name = p.name;
+      
+      // Pequeña etiqueta
+      const labelGeo = new THREE.PlaneGeometry(p.name.length * 0.25 + 0.4, 0.2);
+      const labelMat = new THREE.MeshBasicMaterial({ 
+        color: 0xffffff,
+        transparent: true,
+        opacity: 0.7
+      });
+      const label = new THREE.Mesh(labelGeo, labelMat);
+      label.position.copy(planet.position);
+      label.position.y = p.radius + 0.1;
+      label.rotation.x = -Math.PI / 2;
+      scene.add(label);
+      
+      planetMeshes.push({ mesh: planet, label: label, data: p });
+    }
+    
+    // ===== ETIQUETA CTA (Llamado a la Acción) =====
+    // Texto grande en pantalla
+    const ctaText = "¿Qué planeta te gustaría explorar?";
+    const ctaGeo = new THREE.PlaneGeometry(ctaText.length * 0.4 + 2, 0.8);
+    const ctaMat = new THREE.MeshBasicMaterial({ 
+      color: 0xffff00,
+      transparent: true,
+      opacity: 0.9
+    });
+    const ctaLabel = new THREE.Mesh(ctaGeo, ctaMat);
+    ctaLabel.position.set(0, -3, -5);
+    ctaLabel.rotation.x = -Math.PI / 4;
+    scene.add(ctaLabel);
+    
+    // Texto secundario
+    const ctaText2 = "Déjalo en los comentarios y suscríbete";
+    const ctaGeo2 = new THREE.PlaneGeometry(ctaText2.length * 0.35 + 1.5, 0.4);
+    const ctaMat2 = new THREE.MeshBasicMaterial({ 
+      color: 0xffffff,
+      transparent: true,
+      opacity: 0.7
+    });
+    const ctaLabel2 = new THREE.Mesh(ctaGeo2, ctaMat2);
+    ctaLabel2.position.set(0, -3.5, -5);
+    ctaLabel2.rotation.x = -Math.PI / 4;
+    scene.add(ctaLabel2);
+    
+    // Estrellas de fondo profundas
+    const starCount = 300;
+    const starGeo = new THREE.BufferGeometry();
+    const starPos = new Float32Array(starCount * 3);
+    const starSize = new Float32Array(starCount);
+    
+    for (let i = 0; i < starCount; i++) {
+      const r = 20 + Math.random() * 40;
+      const theta = Math.random() * Math.PI * 2;
+      const phi = Math.acos(2 * Math.random() - 1);
+      
+      starPos[i * 3] = r * Math.sin(phi) * Math.cos(theta);
+      starPos[i * 3 + 1] = r * Math.sin(phi) * Math.sin(theta);
+      starPos[i * 3 + 2] = r * Math.cos(phi);
+      
+      starSize[i] = 0.5 + Math.random() * 1.0;
+    }
+    
+    starGeo.setAttribute('position', new THREE.BufferAttribute(starPos, 3));
+    starGeo.setAttribute('size', new THREE.BufferAttribute(starSize, 1));
+    
+    const starMat = new THREE.PointsMaterial({
+      color: 0xffffff,
+      size: 1,
+      transparent: true,
+      opacity: 0.4
+    });
+    
+    const stars = new THREE.Points(starGeo, starMat);
+    stars.position.set(0, 0, -50);
+    scene.add(stars);
+    
+    // ===== ANIMATION: Panorámica final y CTA =====
+    let cierreProgress = 0;
+    
+    window.updateScene = function(timeInSeconds) {
+      // Rotar sol final
+      finalSun.rotation.y += 0.01;
+      finalSunMat.uniforms.uTime.value = timeInSeconds;
+      
+      // Rotar planetas alrededor
+      for (let i = 0; i < planetMeshes.length; i++) {
+        const p = planetMeshes[i];
+        p.mesh.rotation.y += p.data.speed;
+        p.label.position.copy(p.mesh.position);
+      }
+      
+      // Hacer girar estrellas
+      stars.rotation.y += 0.001;
+      
+      // Mover etiqueta CTA ligeramente
+      ctaLabel.position.y = -3 + Math.sin(timeInSeconds * 0.1) * 0.1;
+      ctaLabel2.position.copy(ctaLabel.position);
+      ctaLabel2.position.z = -5;
+      
+      const progress = timeInSeconds / 90;
+      
+      return {
+        globalTime: timeInSeconds,
+        active: true,
+        scene: "cierre",
+        localTime: timeInSeconds % 90,
+        progress: progress
+      };
+    };
+    
+    // Loop de animación
+    let cierreFrame = 0;
+    function animate() {
+      requestAnimationFrame(animate);
+      
+      const sceneState = window.updateScene(cierreFrame);
+      
+      renderer.render(scene, camera);
+      
+      cierreFrame = (cierreFrame + 1) % 2700;
+    }
+    animate();
+  </script>
+</body>
+</html>

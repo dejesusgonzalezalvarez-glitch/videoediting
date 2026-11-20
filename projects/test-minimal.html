@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Test Three.js</title>
+  <style>body { margin: 0; overflow: hidden; background: #000; }</style>
+</head>
+<body>
+  <canvas id="canvas"></canvas>
+  
+  
+  
+  <script type="module">
+    import * as THREE from '../../../node_modules/three/build/three.module.js';
+import * as THREE from 'three';
+    
+    console.log('Three.js version:', THREE.REVISION);
+    
+    const scene = new THREE.Scene();
+    scene.background = new THREE.Color(0x0a0a1a);
+    
+    const camera = new THREE.PerspectiveCamera(45, 1920/1080, 0.1, 1000);
+    camera.position.set(0, 2, 5);
+    
+    const renderer = new THREE.WebGLRenderer({ canvas: document.querySelector('#canvas'), antialias: true });
+    renderer.setSize(1920, 1080);
+    renderer.setPixelRatio(1);
+    
+    // Luz
+    const ambientLight = new THREE.AmbientLight(0xffffff, 0.5);
+    scene.add(ambientLight);
+    
+    const dirLight = new THREE.DirectionalLight(0xffffff, 1);
+    dirLight.position.set(5, 5, 5);
+    scene.add(dirLight);
+    
+    // Sol
+    const solGeo = new THREE.SphereGeometry(2, 64, 64);
+    const solMat = new THREE.MeshStandardMaterial({ color: 0xffa500, emissive: 0xff4500 });
+    const sol = new THREE.Mesh(solGeo, solMat);
+    sol.position.set(0, 0, 0);
+    scene.add(sol);
+    
+    // Planeta Tierra
+    const tierraGeo = new THREE.SphereGeometry(0.5, 32, 32);
+    const tierraMat = new THREE.MeshStandardMaterial({ color: 0x22aaff });
+    const tierra = new THREE.Mesh(tierraGeo, tierraMat);
+    tierra.position.set(5, 0, 0);
+    scene.add(tierra);
+    
+    console.log('Escena creada con', scene.children.length, 'objetos');
+    
+    window.updateScene = function(timeInSeconds) {
+      sol.rotation.y += 0.01;
+      tierra.rotation.y += 0.02;
+      renderer.render(scene, camera);
+      return { globalTime: timeInSeconds, active: true, scene: 'test', localTime: timeInSeconds, progress: timeInSeconds / 90 };
+    };
+    
+    window.updateScene(0);
+    console.log('Render inicial completado');
+  </script>
+</body>
+</html>

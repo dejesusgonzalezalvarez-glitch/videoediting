@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>System Solar - Hechos Curiosos</title>
+  <style>
+    body { margin: 0; overflow: hidden; background: #000; }
+    #canvas { display: block; }
+  </style>
+</head>
+<body>
+  <canvas id="threejs-canvas"></canvas>
+  
+  <script type="module">
+    
+    
+    import * as THREE from '../../../node_modules/three/build/three.module.js';
+// Escena, cámara, renderer
+    const scene = new THREE.Scene();
+    scene.background = new THREE.Color(0x010105);
+    
+    const camera = new THREE.PerspectiveCamera(45, 1920/1080, 0.1, 1000);
+    camera.position.set(0, 2, 12);
+    
+    const renderer = new THREE.WebGLRenderer({ 
+      canvas: document.querySelector('#threejs-canvas'), 
+      antialias: true 
+    });
+    renderer.setSize(1920, 1080);
+    renderer.setPixelRatio(window.devicePixelRatio);
+    
+    // Luz ambiental
+    const ambientLight = new THREE.AmbientLight(0x101020, 0.4);
+    scene.add(ambientLight);
+    
+    // Luz focal para resaltar objetos
+    const pointLight = new THREE.PointLight(0xffffff, 0.5, 10);
+    pointLight.position.set(0, 2, 0);
+    scene.add(pointLight);
+    
+    // ===== RELOJES DE PLANETAS (representando diferentes años planetarios) =====
+    const planetYearData = [
+      { name: "MERCURY", earthYears: 88, size: 1, color: 0xffa500 },
+      { name: "VENUS", earthYears: 225, size: 1.2, color: 0xffd700 },
+      { name: "EARTH", earthYears: 365, size: 1.3, color: 0x4a90e2 },
+      { name: "MARS", earthYears: 687, size: 1.1, color: 0xff6347 },
+      { name: "JÚPITER", earthYears: 4333, size: 1.5, color: 0xffa500 },
+      { name: "SATURNO", earthYears: 10759, size: 1.4, color: 0xffd700 },
+      { name: "URANO", earthYears: 30687, size: 1.3, color: 0x48d1cc },
+      { name: "NEPTUNO", earthYears: 60190, size: 1.3, color: 0x001aff }
+    ];
+    
+    const yearClocks = [];
+    
+    for (let i = 0; i < planetYearData.length; i++) {
+      const y = planetYearData[i];
+      
+      // Un círculo con una marca giratoria para representar el "reloj" del año
+      const clockGeo = new THREE.RingGeometry(0.3, 0.35, 8);
+      const clockMat = new THREE.MeshBasicMaterial({ 
+        color: y.color,
+        transparent: true,
+        opacity: 0.8
+      });
+      const clock = new THREE.Mesh(clockGeo, clockMat);
+      
+      // Posicionar en círculo alrededor de la escena
+      const angle = (i / planetYearData.length) * Math.PI * 2;
+      const radius = 4 + i * 0.6;
+      clock.position.x = Math.cos(angle) * radius;
+      clock.position.z = Math.sin(angle) * radius;
+      clock.position.y = 0.5;
+      
+      // Rotación basada en el "año" del planeta
+      // Más lento para años más largos
+      clock.userData.spinSpeed = 0.01 * (y.earthYears / 365);
+      clock.userData.years = y.earthYears;
+      clock.userData.name = y.name;
+      
+      scene.add(clock);
+      yearClocks.push(clock);
+    }
+    
+    // ===== SOL CENTRAL PEQUEÑO =====
+    const smallSunGeo = new THREE.SphereGeometry(0.8, 32, 32);
+    const smallSunMat = new THREE.MeshStandardMaterial({ 
+      color: 0xffa500,
+      emissive: 0xff4500
+    });
+    const smallSun = new THREE.Mesh(smallSunGeo, smallSunMat);
+    smallSun.position.set(0, 0, 0);
+    scene.add(smallSun);
+    
+    // ===== DINÁMICA DE VIENTO (Neptuno) =====
+    // Representar vientos de 2,400 km/h en Neptuno
+    const windGeometry = new THREE.BoxGeometry(8, 0.5, 8);
+    const windMat = new THREE.MeshBasicMaterial({ 
+      color: 0x191970,
+      transparent: true,
+      opacity: 0.3
+    });
+    const wind = new THREE.Mesh(windGeometry, windMat);
+    wind.position.set(-6, -1, -3);
+    wind.rotation.z = Math.PI / 4;
+    scene.add(wind);
+    
+    // Flechas indicando dirección del viento
+    const arrowHelper1 = new THREE.ArrowHelper(
+      new THREE.Vector3(1, 0, 0),
+      new THREE.Vector3(-6, -1, -3),
+      1,
+      0xff0000,
+      0.2,
+      0.2
+    );
+    scene.add(arrowHelper1);
+    
+    const arrowHelper2 = new THREE.ArrowHelper(
+      new THREE.Vector3(0, 1, 0),
+      new THREE.Vector3(-6, -1, -3),
+      1,
+      0xffa500,
+      0.2,
+      0.2
+    );
+    scene.add(arrowHelper2);
+    
+    // ===== TEXTO "HECHOS" FLOTANTES =====
+    // Varios hechos como texto flotante
+    const facts = [
+      "Año en Mercurio: 88 días terrestres",
+      "Año en Neptuno: 165 años terrestres",
+      "Vientos en Neptuno: 2,400 km/h",
+      "Mercurio no tiene atmósfera densa",
+      "Saturno podría flotar en agua",
+      "Un día en Venus = 243 días terrestres",
+      "Los vientos soplan backwards en Venus"
+    ];
+    
+    const factObjects = [];
+    
+    for (let i = 0; i < facts.length; i++) {
+      const fact = facts[i];
+      
+      // Texto como plano (en una implementación completa usaríamos TextGeometry)
+      // Por ahora, un rectángulo con el largo proporcional
+      const factLen = facts[i].length;
+      const factGeo = new THREE.PlaneGeometry(factLen * 0.25 + 1, 0.3);
+      const factMat = new THREE.MeshBasicMaterial({
+        color: 0xffff00,
+        transparent: true,
+        opacity: 0.9
+      });
+      const factMesh = new THREE.Mesh(factGeo, factMat);
+      
+      // Posicionar en círculo/patrón
+      const factAngle = (i / facts.length) * Math.PI * 2;
+      const factRadius = 5 + (i % 3) * 1.5;
+      factMesh.position.x = Math.cos(factAngle) * factRadius;
+      factMesh.position.z = Math.sin(factAngle) * factRadius;
+      factMesh.position.y = 1 + (i % 2) * 0.3;
+      
+      // Rotación lenta
+      factMesh.userData.spinSpeed = 0.005 + Math.random() * 0.003;
+      
+      scene.add(factMesh);
+      factObjects.push({ mesh: factMesh, text: facts[i], spinSpeed: factMesh.userData.spinSpeed });
+    }
+    
+    // ===== ANIMATION: Giro de relojes y hechos =====
+    let faitsProgress = 0;
+    
+    window.updateScene = function(timeInSeconds) {
+      // Rotar sol pequeño
+      smallSun.rotation.y += 0.02;
+      smallSun.rotation.x += 0.01;
+      
+      // Girar relojes planetarios
+      for (let i = 0; i < yearClocks.length; i++) {
+        const clock = yearClocks[i];
+        clock.rotation.z += clock.userData.spinSpeed;
+      }
+      
+      // Hacer flotar hechos
+      for (let i = 0; i < factObjects.length; i++) {
+        const fact = factObjects[i];
+        fact.mesh.rotation.y += fact.spinSpeed;
+        fact.mesh.position.y += Math.sin(timeInSeconds * 0.1) * 0.01;
+      }
+      
+      const progress = timeInSeconds / 90;
+      
+      return {
+        globalTime: timeInSeconds,
+        active: true,
+        scene: "hechos",
+        localTime: timeInSeconds % 60,
+        progress: progress
+      };
+    };
+    
+    // Loop de animación
+    let faitsFrame = 0;
+    function animate() {
+      requestAnimationFrame(animate);
+      
+      const sceneState = window.updateScene(faitsFrame);
+      
+      renderer.render(scene, camera);
+      
+      faitsFrame = (faitsFrame + 1) % 2700;
+    }
+    animate();
+  </script>
+</body>
+</html>

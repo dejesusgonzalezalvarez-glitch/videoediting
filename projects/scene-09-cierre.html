@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Escena cierre</title>
+<style>
+  body { margin:0; overflow:hidden; background:#000; }
+  canvas { display:block; width:100vw; height:100vh; }
+  #typography {
+    position:absolute; top:50%; left:50%; transform:translate(-50%,-50%);
+    color:#ffffff; font-family:Arial,sans-serif; font-size:48px; font-weight:bold;
+    text-align:center; pointer-events:none; opacity:0; transition:opacity 0.5s ease;
+    text-shadow: 0 0 10px rgba(0,255,255,0.5); padding:20px; box-sizing:border-box;
+    max-width:90%; line-height:1.4;
+  }
+  #overlay {
+    position:absolute; top:15px; left:15px; color:#00ffff; font-family:monospace;
+    font-size:14px; background:rgba(0,0,0,0.6); padding:8px; border-radius:4px;
+    pointer-events:none;
+  }
+</style>
+<script type="importmap">
+  {
+    "imports": {
+      "three": "../../../node_modules/three/build/three.module.js",
+      "three/addons/": "../../../node_modules/three/examples/jsm/"
+    }
+  }
+</script>
+</head>
+<body>
+<div id="overlay">Escena: cierre | t=<span id="time">0</span>s</div>
+<div id="typography">¿A quién enviarías al espacio?</div>
+<script type="module">
+  import * as THREE from 'three';
+  const scene = new THREE.Scene();
+  scene.background = new THREE.Color(0x000000);
+  const camera = new THREE.PerspectiveCamera(45, 1080/1920, 0.1, 1000);
+  camera.position.set(0, 4, 20);
+  camera.lookAt(0, 0, -10);
+  const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+  renderer.setSize(1080, 1920);
+  renderer.setPixelRatio(1);
+  renderer.shadowMap.enabled = true;
+  document.body.appendChild(renderer.domElement);
+
+  
+        import * as THREE from 'three';
+        
+    const ambient = new THREE.AmbientLight(0x444444, 0.4);
+    scene.add(ambient);
+    const keyLight = new THREE.DirectionalLight(0xffffff, 1);
+    keyLight.position.set(5, 10, 7);
+    keyLight.castShadow = true;
+    scene.add(keyLight);
+    const fillLight = new THREE.DirectionalLight(0xaaaaaa, 0.4);
+    fillLight.position.set(-5, 2, 5);
+    scene.add(fillLight);
+  
+        // Silueta de Bukele (estilizada, sin copiar personas reales)
+        const bukeleGroup = new THREE.Group();
+        const head = new THREE.Mesh(new THREE.SphereGeometry(0.6, 16, 16), new THREE.MeshStandardMaterial({color: 0x333333}));
+        head.position.y = 1.6;
+        bukeleGroup.add(head);
+        const body = new THREE.Mesh(new THREE.BoxGeometry(0.7, 1.2, 0.4), new THREE.MeshStandardMaterial({color: 0x1a1a2e}));
+        body.position.y = 0.9;
+        bukeleGroup.add(body);
+        const suit = new THREE.Mesh(new THREE.BoxGeometry(0.9, 0.6, 0.5), new THREE.MeshStandardMaterial({color: 0x0d1b2a}));
+        suit.position.y = 0.3;
+        bukeleGroup.add(suit);
+        bukeleGroup.position.set(0, 0, -3);
+        scene.add(bukeleGroup);
+        window.__bukele = bukeleGroup;
+
+        // Agujero negro supermasivo
+        const bhGroup = new THREE.Group();
+        const bhCore = new THREE.Mesh(new THREE.SphereGeometry(1.5, 32, 32), new THREE.MeshBasicMaterial({color: 0x000000}));
+        bhGroup.add(bhCore);
+        const ringGeo = new THREE.RingGeometry(1.6, 3.5, 64);
+        const ringMat = new THREE.MeshBasicMaterial({color: 0x00ffff, transparent: true, opacity: 0.6, side: THREE.DoubleSide});
+        const ring = new THREE.Mesh(ringGeo, ringMat);
+        ring.rotation.x = -Math.PI / 2;
+        bhGroup.add(ring);
+        bhGroup.position.set(0, -1, -8);
+        scene.add(bhGroup);
+        window.__blackHole = bhGroup;
+      
+
+  window.updateScene = function(timeInSeconds) {
+    const t = Number(timeInSeconds) || 0;
+    document.getElementById('time').textContent = t.toFixed(2);
+    const typ = document.getElementById('typography');
+    if (typ) {
+      typ.style.opacity = 1;
+    }
+    
+        if (window.__bukele) {
+          window.__bukele.position.z += 0.03;
+          window.__bukele.rotation.y += 0.02;
+        }
+        if (window.__blackHole) {
+          window.__blackHole.rotation.y += 0.01;
+          window.__blackHole.children[1].rotation.z += 0.02;
+        }
+      
+    renderer.render(scene, camera);
+    return { localTime: t, active: true };
+  };
+
+  if (typeof window.updateScene === 'function') window.updateScene(0);
+</script>
+</body>
+</html>

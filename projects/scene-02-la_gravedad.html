@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Escena la_gravedad</title>
+<style>
+  body { margin:0; overflow:hidden; background:#000; }
+  canvas { display:block; width:100vw; height:100vh; }
+  #typography {
+    position:absolute; top:50%; left:50%; transform:translate(-50%,-50%);
+    color:#ffffff; font-family:Arial,sans-serif; font-size:48px; font-weight:bold;
+    text-align:center; pointer-events:none; opacity:0; transition:opacity 0.5s ease;
+    text-shadow: 0 0 10px rgba(0,255,255,0.5); padding:20px; box-sizing:border-box;
+    max-width:90%; line-height:1.4;
+  }
+  #overlay {
+    position:absolute; top:15px; left:15px; color:#00ffff; font-family:monospace;
+    font-size:14px; background:rgba(0,0,0,0.6); padding:8px; border-radius:4px;
+    pointer-events:none;
+  }
+</style>
+<script type="importmap">
+  {
+    "imports": {
+      "three": "../../../node_modules/three/build/three.module.js",
+      "three/addons/": "../../../node_modules/three/examples/jsm/"
+    }
+  }
+</script>
+</head>
+<body>
+<div id="overlay">Escena: la_gravedad | t=<span id="time">0</span>s</div>
+<div id="typography">LA GRAVEDAD CURVA EL ESPACIO-TIEMPO</div>
+<script type="module">
+  import * as THREE from 'three';
+  const scene = new THREE.Scene();
+  scene.background = new THREE.Color(0x000000);
+  const camera = new THREE.PerspectiveCamera(45, 1080/1920, 0.1, 1000);
+  camera.position.set(5, 5, 8);
+  camera.lookAt(0, 0, 0);
+  const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+  renderer.setSize(1080, 1920);
+  renderer.setPixelRatio(1);
+  renderer.shadowMap.enabled = true;
+  document.body.appendChild(renderer.domElement);
+
+  
+        import * as THREE from 'three';
+        
+    const ambient = new THREE.AmbientLight(0x444444, 0.4);
+    scene.add(ambient);
+    const keyLight = new THREE.DirectionalLight(0xffffff, 1);
+    keyLight.position.set(5, 10, 7);
+    keyLight.castShadow = true;
+    scene.add(keyLight);
+    const fillLight = new THREE.DirectionalLight(0xaaaaaa, 0.4);
+    fillLight.position.set(-5, 2, 5);
+    scene.add(fillLight);
+  
+        // Grid del espacio-tiempo
+        const gridHelper = new THREE.GridHelper(40, 40, 0xffaa00, 0x333333);
+        gridHelper.position.y = -2;
+        scene.add(gridHelper);
+        window.__grid = gridHelper;
+
+        // Agujero negro en el centro
+        const bh = new THREE.Mesh(new THREE.SphereGeometry(1, 32, 32), new THREE.MeshBasicMaterial({color: 0x000000}));
+        bh.position.set(0, -2, -5);
+        scene.add(bh);
+        window.__bh = bh;
+
+        // Reloj para escena de tiempo
+        if ('la_gravedad' === 'el_tiempo') {
+          const clockGroup = new THREE.Group();
+          const clockFace = new THREE.Mesh(new THREE.CircleGeometry(0.8, 32), new THREE.MeshStandardMaterial({color: 0xffffff}));
+          clockFace.rotation.x = -Math.PI / 2;
+          clockGroup.add(clockFace);
+          const hand = new THREE.Mesh(new THREE.BoxGeometry(0.05, 0.6, 0.1), new THREE.MeshStandardMaterial({color: 0xff0000}));
+          hand.position.y = 0.3;
+          clockGroup.add(hand);
+          clockGroup.position.set(0, 1, -4);
+          scene.add(clockGroup);
+          window.__clock = clockGroup;
+        }
+
+        // Silueta estirándose (espaguetificación)
+        if ('la_gravedad' === 'el_estiramiento') {
+          const stretchGroup = new THREE.Group();
+          const segments = [];
+          for (let i = 0; i < 8; i++) {
+            const seg = new THREE.Mesh(new THREE.BoxGeometry(0.4, 0.6, 0.4), new THREE.MeshStandardMaterial({color: 0x333333}));
+            seg.position.y = -1 + i * 0.7;
+            stretchGroup.add(seg);
+            segments.push(seg);
+          }
+          stretchGroup.position.set(0, 0, -4);
+          scene.add(stretchGroup);
+          window.__stretch = { group: stretchGroup, segments };
+        }
+      
+
+  window.updateScene = function(timeInSeconds) {
+    const t = Number(timeInSeconds) || 0;
+    document.getElementById('time').textContent = t.toFixed(2);
+    const typ = document.getElementById('typography');
+    if (typ) {
+      typ.style.opacity = 1;
+    }
+    
+        if (window.__grid) {
+          const time = performance.now() * 0.001;
+          for (let i = 0; i < window.__grid.geometry.attributes.position.count; i++) {
+            const y = window.__grid.geometry.attributes.position.getY(i);
+            const x = window.__grid.geometry.attributes.position.getX(i);
+            const dist = Math.sqrt(x*x + y*y);
+            const wave = Math.sin(dist * 0.5 - time * 2) * 0.5;
+            window.__grid.geometry.attributes.position.setZ(i, wave);
+          }
+          window.__grid.geometry.attributes.position.needsUpdate = true;
+        }
+        if (window.__bh) {
+          window.__bh.rotation.y += 0.02;
+        }
+        if (window.__clock) {
+          window.__clock.rotation.z += 0.02;
+        }
+        if (window.__stretch) {
+          const t = performance.now() * 0.001;
+          window.__stretch.segments.forEach((seg, i) => {
+            const stretch = 1 + Math.sin(t + i) * 0.3;
+            seg.scale.y = 1 + Math.abs(Math.sin(t * 2 + i)) * 2;
+            seg.position.y = -1 + i * 0.7 + Math.sin(t + i) * 0.5;
+          });
+        }
+      
+    renderer.render(scene, camera);
+    return { localTime: t, active: true };
+  };
+
+  if (typeof window.updateScene === 'function') window.updateScene(0);
+</script>
+</body>
+</html>

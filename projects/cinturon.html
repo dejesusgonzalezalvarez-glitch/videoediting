@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>System Solar - Cinturón de Asteroides</title>
+  <style>
+    body { margin: 0; overflow: hidden; background: #000; }
+    #canvas { display: block; }
+  </style>
+</head>
+<body>
+  <canvas id="threejs-canvas"></canvas>
+  
+  <script type="module">
+    
+    
+    import * as THREE from '../../../node_modules/three/build/three.module.js';
+// Escena, cámara, renderer
+    const scene = new THREE.Scene();
+    scene.background = new THREE.Color(0x060610);
+    
+    const camera = new THREE.PerspectiveCamera(45, 1920/1080, 0.1, 1000);
+    camera.position.set(0, 2, 15);
+    
+    const renderer = new THREE.WebGLRenderer({ 
+      canvas: document.querySelector('#threejs-canvas'), 
+      antialias: true 
+    });
+    renderer.setSize(1920, 1080);
+    renderer.setPixelRatio(window.devicePixelRatio);
+    
+    // Luz ambiental
+    const ambientLight = new THREE.AmbientLight(0x151525, 0.4);
+    scene.add(ambientLight);
+    
+    // Luz direccional cálida (como luz solar a través del cinturón)
+    const dirLight = new THREE.DirectionalLight(0xfff0c0, 0.5);
+    dirLight.position.set(10, 5, 8);
+    scene.add(dirLight);
+    
+    // ===== SOL EN FONDO =====
+    const solGeo = new THREE.SphereGeometry(1.5, 32, 32);
+    const solMat = new THREE.MeshStandardMaterial({ 
+      color: 0xffa500,
+      emissive: 0xff4500
+    });
+    const sol = new THREE.Mesh(solGeo, solMat);
+    sol.position.set(-10, 0, -6);
+    scene.add(sol);
+    
+    // ===== SOL DEL SISTEMA INTERIOR =====
+    // Representar la línea de planeta-roca a gigante-gas
+    // Línea imaginaria de gravitación de Júpiter
+    const gravityLineGeo = new THREE.CylinderGeometry(0.1, 0.1, 12, 8);
+    const gravityLineMat = new THREE.MeshBasicMaterial({ 
+      color: 0xff0000,
+      transparent: true,
+      opacity: 0.1
+    });
+    const gravityLine = new THREE.Mesh(gravityLineGeo, gravityLineMat);
+    gravityLine.position.set(0, 0, 0);
+    gravityLine.rotation.x = Math.PI / 2;
+    scene.add(gravityLine);
+    
+    // ===== CINTURÓN DE ASTEROIDES =====
+    // Asteroides distribuidos entre Marte y Júpiter
+    const asteroidCount = 50;
+    const asteroidData = [];
+    
+    for (let i = 0; i < asteroidCount; i++) {
+      // Distancia entre Marte (~5.2 UA) y Júpiter (~7.8 UA)
+      const distance = 5.2 + Math.random() * 2.6;
+      const inclination = (Math.random() - 0.5) * 0.3; // inclinación suave
+      const eccentricity = Math.random() * 0.1;
+      
+      const size = 0.1 + Math.random() * 0.2; // Tamaños variables
+      
+      const geo = new THREE.SphereGeometry(size, 8, 8);
+      // Colores de asteroides (rocosos, algunos con óxido)
+      const colorIdx = Math.floor(Math.random() * 3);
+      const colors = [0x8b4513, 0xb5651d, 0xcd853f];
+      const mat = new THREE.MeshStandardMaterial({ 
+        color: colors[colorIdx],
+        roughness: 0.9,
+        metalness: 0.0
+      });
+      
+      const asteroid = new THREE.Mesh(geo, mat);
+      
+      // Posicionar en órbita elíptica simple
+      const angle = Math.random() * Math.PI * 2;
+      const orbitalRadius = distance;
+      asteroid.position.set(
+        Math.cos(angle) * orbitalRadius,
+        Math.sin(angle) * orbitalRadius * inclination,
+        Math.sin(angle) * orbitalRadius * eccentricity
+      );
+      
+      asteroid.userData.speed = 0.005 + Math.random() * 0.003;
+      asteroid.userData.size = size;
+      
+      scene.add(asteroid);
+      asteroidData.push(asteroid);
+    }
+    
+    // Línea del cinturón (promedio)
+    const beltGeo = new THREE.TorusGeometry(6.5, 1, 8, 64);
+    const beltMat = new THREE.MeshBasicMaterial({ 
+      color: 0x696969,
+      transparent: true,
+      opacity: 0.2
+    });
+    const belt = new THREE.Mesh(beltGeo, beltMat);
+    belt.rotation.x = Math.PI / 2;
+    scene.add(belt);
+    
+    // ===== ETIQUETAS: MARTE Y JÚPITER =====
+    // Flecha y etiqueta a Marte
+    const arrowToMars = new THREE.ArrowHelper(
+      new THREE.Vector3(1, 0, 0),
+      new THREE.Vector3(5, 0, 0),
+      3,
+      0xb22222,
+      0.3,
+      0.3
+    );
+    scene.add(arrowToMars);
+    
+    const labelMars = new THREE.PlaneGeometry(1.5, 0.25);
+    const labelMatMars = new THREE.MeshBasicMaterial({ 
+      color: 0xb22222,
+      transparent: true,
+      opacity: 0.8
+    });
+    const labelMeshMars = new THREE.Mesh(labelMars, labelMatMars);
+    labelMeshMars.position.set(6, 0.1, 0);
+    labelMeshMars.rotation.x = -Math.PI / 2;
+    scene.add(labelMeshMars);
+    
+    // Flecha y etiqueta a Júpiter
+    const arrowToJupiter = new THREE.ArrowHelper(
+      new THREE.Vector3(1, 0, 0),
+      new THREE.Vector3(8, 0, 0),
+      4,
+      0xffa500,
+      0.3,
+      0.3
+    );
+    scene.add(arrowToJupiter);
+    
+    const labelJupiter = new THREE.PlaneGeometry(2, 0.3);
+    const labelMatJupiter = new THREE.MeshBasicMaterial({ 
+      color: 0xffa500,
+      transparent: true,
+      opacity: 0.8
+    });
+    const labelMeshJupiter = new THREE.Mesh(labelJupiter, labelMatJupiter);
+    labelMeshJupiter.position.set(9, 0.15, 0);
+    labelMeshJupiter.rotation.x = -Math.PI / 2;
+    scene.add(labelMeshJupiter);
+    
+    // ===== ANIMATION: Asterosides girando =====
+    let beltProgress = 0;
+    
+    window.updateScene = function(timeInSeconds) {
+      // Rotar Sol
+      sol.rotation.y += 0.01;
+      
+      // Girar asteroides
+      for (let i = 0; i < asteroidData.length; i++) {
+        const a = asteroidData[i];
+        a.rotation.y += a.userData.speed;
+        a.position.x += Math.sin(timeInSeconds * 0.05) * 0.005;
+        a.position.z += Math.cos(timeInSeconds * 0.03) * 0.003;
+      }
+      
+      // Rotar línea de gravedad
+      gravityLine.rotation.z += 0.005;
+      
+      // Rotar cinturón
+      belt.rotation.z += 0.002;
+      
+      const progress = timeInSeconds / 90;
+      
+      return {
+        globalTime: timeInSeconds,
+        active: true,
+        scene: "cinturon",
+        localTime: timeInSeconds % 70,
+        progress: progress
+      };
+    };
+    
+    // Loop de animación
+    let beltFrame = 0;
+    function animate() {
+      requestAnimationFrame(animate);
+      
+      const sceneState = window.updateScene(beltFrame);
+      
+      renderer.render(scene, camera);
+      
+      beltFrame = (beltFrame + 1) % 2700;
+    }
+    animate();
+  </script>
+</body>
+</html>
