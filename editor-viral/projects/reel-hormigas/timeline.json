@@ -1,0 +1,72 @@
+{
+  "meta": {
+    "id": "reel-hormigas",
+    "title": "La vida secreta de las hormigas",
+    "format": "9:16",
+    "target_duration": 80,
+    "style": "watercolor"
+  },
+  "tracks": {
+    "video": [
+      { "id": "v1", "src": "assets/footage/nature/ant-colony-closeup.mp4", "in": 0, "out": 3.5, "start": 0 },
+      { "id": "v2", "src": "assets/footage/nature/queen-ant-laying-eggs.mp4", "in": 0, "out": 4, "start": 3.5 },
+      { "id": "v3", "src": "assets/footage/nature/ant-larvae-feeding.mp4", "in": 0, "out": 5, "start": 7.5 },
+      { "id": "v4", "src": "assets/footage/nature/ant-trail-pheromone.mp4", "in": 0, "out": 6, "start": 12.5 },
+      { "id": "v5", "src": "assets/footage/nature/ants-hunting-team.mp4", "in": 0, "out": 5, "start": 18.5 },
+      { "id": "v6", "src": "assets/footage/nature/leafcutter-ants-fungus.mp4", "in": 0, "out": 5, "start": 23.5 },
+      { "id": "v7", "src": "assets/footage/nature/ants-aphids-farming.mp4", "in": 0, "out": 5, "start": 28.5 },
+      { "id": "v8", "src": "assets/footage/nature/ant-swarm-biomass.mp4", "in": 0, "out": 6, "start": 33.5 },
+      { "id": "v9", "src": "assets/footage/nature/ant-fossil-amber.mp4", "in": 0, "out": 5, "start": 39.5 },
+      { "id": "v10", "src": "assets/footage/nature/ant-lifting-weight.mp4", "in": 0, "out": 4, "start": 44.5 },
+      { "id": "v11", "src": "assets/footage/nature/ant-bridge-construction.mp4", "in": 0, "out": 5, "start": 48.5 },
+      { "id": "v12", "src": "assets/footage/nature/ant-superorganism.mp4", "in": 0, "out": 8, "start": 53.5 },
+      { "id": "v13", "src": "assets/footage/nature/ant-queen-closeup.mp4", "in": 0, "out": 7, "start": 61.5 },
+      { "id": "v14", "src": "assets/footage/nature/ant-colony-sunset.mp4", "in": 0, "out": 10, "start": 68.5 }
+    ],
+    "text": [
+      { "content": "Las hormigas NO DUERMEN. Nunca.", "start": 0, "end": 2, "style": "hook", "font": "Bebas", "size": 130, "color": "#FFD700", "stroke": "#000000", "stroke_width": 5, "x": "(w-text_w)/2", "y": "(h-text_h)/2", "animation": "scale-bounce" },
+      { "content": "100 millones de años dominando la Tierra", "start": 2, "end": 4, "style": "fact", "font": "Anton", "size": 56, "color": "#FF6B6B", "stroke": "#000000", "stroke_width": 3, "x": "(w-text_w)/2", "y": "h-180", "animation": "slide-up" },
+      { "content": "300,000 huevos en una vida", "start": 4, "end": 7, "style": "counter", "font": "JetBrains Mono", "size": 72, "color": "#00FF88", "x": "(w-text_w)/2", "y": "(h-text_h)/2", "animation": "count-up" },
+      { "content": "Obreira\\: 45 días  \\|  Reina\\: 30 AÑOS", "start": 7.5, "end": 12, "style": "fact", "font": "Bebas", "size": 52, "color": "#FFD700", "stroke": "#000000", "stroke_width": 4, "x": "(w-text_w)/2", "y": "(h-text_h)/2", "animation": "pulse" },
+      { "content": "Mismo ADN. Destino distinto. Solo por la COMIDA.", "start": 12.5, "end": 17, "style": "fact", "font": "Inter", "size": 48, "color": "#FFFFFF", "stroke": "#000000", "stroke_width": 3, "x": "(w-text_w)/2", "y": "h-200", "animation": "typewriter" },
+      { "content": "Jalea real = reina. Comida normal = obrera.", "start": 17, "end": 21, "style": "fact", "font": "Anton", "size": 56, "color": "#4ECDC4", "stroke": "#000000", "stroke_width": 3, "x": "(w-text_w)/2", "y": "h-180", "animation": "shake" },
+      { "content": "Internet químico: feromonas", "start": 21.5, "end": 25, "style": "fact", "font": "Bangers", "size": 52, "color": "#FF6B6B", "stroke": "#000000", "stroke_width": 3, "x": "(w-text_w)/2", "y": "h-200", "animation": "slide-up" },
+      { "content": "Una encuentra azúcar \\-> cientos la siguen en MINUTOS", "start": 25, "end": 29, "style": "fact", "font": "Inter", "size": 44, "color": "#FFFFFF", "stroke": "#000000", "stroke_width": 2, "x": "(w-text_w)/2", "y": "h-180", "animation": "typewriter" },
+      { "content": "Cazan en EQUIPO. Presas 1000x su tamaño.", "start": 29.5, "end": 33, "style": "fact", "font": "Bebas", "size": 56, "color": "#FFD700", "stroke": "#000000", "stroke_width": 4, "x": "(w-text_w)/2", "y": "(h-text_h)/2", "animation": "pulse" },
+      { "content": "Agricultores: cultivan hongos desde hace 50 MILLONES de años", "start": 33.5, "end": 38, "style": "fact", "font": "Inter", "size": 46, "color": "#00FF88", "stroke": "#000000", "stroke_width": 3, "x": "(w-text_w)/2", "y": "h-200", "animation": "slide-up" },
+      { "content": "Ganaderos: crían pulgones como ganado", "start": 38, "end": 41, "style": "fact", "font": "Anton", "size": 52, "color": "#4ECDC4", "stroke": "#000000", "stroke_width": 3, "x": "(w-text_w)/2", "y": "h-180", "animation": "shake" },
+      { "content": "Su biomasa \\> TODA la humanidad junta", "start": 41.5, "end": 45, "style": "counter", "font": "JetBrains Mono", "size": 64, "color": "#FF6B6B", "x": "(w-text_w)/2", "y": "(h-text_h)/2", "animation": "count-up" },
+      { "content": "Llevan aquí desde los DINOSAURIOS", "start": 45.5, "end": 49, "style": "fact", "font": "Bangers", "size": 64, "color": "#FFD700", "stroke": "#000000", "stroke_width": 4, "x": "(w-text_w)/2", "y": "(h-text_h)/2", "animation": "scale-bounce" },
+      { "content": "Levantan 50x su peso. Construyen puentes con su cuerpo.", "start": 49.5, "end": 54, "style": "fact", "font": "Inter", "size": 46, "color": "#FFFFFF", "stroke": "#000000", "stroke_width": 2, "x": "(w-text_w)/2", "y": "h-180", "animation": "typewriter" },
+      { "content": "No son insectos. Son un SUPERORGANISMO.", "start": 54.5, "end": 59, "style": "fact", "font": "Bebas", "size": 64, "color": "#00FF88", "stroke": "#000000", "stroke_width": 4, "x": "(w-text_w)/2", "y": "(h-text_h)/2", "animation": "pulse" },
+      { "content": "La reina: el corazón que late 30 años.", "start": 61.5, "end": 66, "style": "fact", "font": "Inter", "size": 48, "color": "#FFD700", "stroke": "#000000", "stroke_width": 3, "x": "(w-text_w)/2", "y": "(h-text_h)/2", "animation": "fade-in" },
+      { "content": "¿Qué otro insecto te parece increíble?", "start": 68.5, "end": 73, "style": "cta", "font": "Bebas", "size": 64, "color": "#FFD700", "x": "(w-text_w)/2", "y": "(h-text_h)/2 - 60", "animation": "pulse-loop" },
+      { "content": "Comenta y sígueme 👇", "start": 73, "end": 78, "style": "cta", "font": "Inter", "size": 40, "color": "#FFFFFF", "x": "(w-text_w)/2", "y": "(h-text_h)/2 + 40", "animation": "fade-in" }
+    ],
+    "audio": {
+      "voice": { "src": "projects/reel-hormigas/voice.wav", "start": 0, "volume_db": 0 },
+      "music": { "src": "assets/audio/music/nature-documentary-ambient.m4a", "start": 0, "volume_db": -18, "fade_in": 0.5, "fade_out": 2.5 },
+      "sfx": [
+        { "time": 0.0, "src": "assets/audio/sfx/heartbeat-deep.wav", "volume": 0.4 },
+        { "time": 2.0, "src": "assets/audio/sfx/magic-chime.wav", "volume": 0.3 },
+        { "time": 4.0, "src": "assets/audio/sfx/pop-soft.wav", "volume": 0.25 },
+        { "time": 7.5, "src": "assets/audio/sfx/transformation.wav", "volume": 0.35 },
+        { "time": 12.5, "src": "assets/audio/sfx/digital-ping.wav", "volume": 0.2 },
+        { "time": 17.0, "src": "assets/audio/sfx/organic-squish.wav", "volume": 0.25 },
+        { "time": 21.5, "src": "assets/audio/sfx/chemical-trail.wav", "volume": 0.3 },
+        { "time": 25.0, "src": "assets/audio/sfx/swarm-buzz.wav", "volume": 0.2 },
+        { "time": 29.5, "src": "assets/audio/sfx/impact-heavy.wav", "volume": 0.4 },
+        { "time": 33.5, "src": "assets/audio/sfx/growth-pop.wav", "volume": 0.25 },
+        { "time": 38.0, "src": "assets/audio/sfx/tiny-bell.wav", "volume": 0.2 },
+        { "time": 41.5, "src": "assets/audio/sfx/scale-up.wav", "volume": 0.35 },
+        { "time": 45.5, "src": "assets/audio/sfx/time-warp.wav", "volume": 0.3 },
+        { "time": 49.5, "src": "assets/audio/sfx/strength-grunt.wav", "volume": 0.25 },
+        { "time": 54.5, "src": "assets/audio/sfx/reveal-hum.wav", "volume": 0.3 },
+        { "time": 61.5, "src": "assets/audio/sfx/heartbeat-slow.wav", "volume": 0.25 },
+        { "time": 68.5, "src": "assets/audio/sfx/question-chime.wav", "volume": 0.3 },
+        { "time": 73.0, "src": "assets/audio/sfx/follow-arrow.wav", "volume": 0.2 }
+      ]
+    },
+    "subtitles": { "src": "projects/reel-hormigas/subtitles.srt", "style": "viral-yellow" }
+  }
+}
