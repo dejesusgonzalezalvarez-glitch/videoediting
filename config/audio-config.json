@@ -1,0 +1,53 @@
+{
+  "name": "projection-mapping-audio",
+  "version": "1.0.0",
+  "description": "Audio configuration for projection mapping educational shorts",
+  
+  "narration": {
+    "language": "es-ES",
+    "ttsEngine": "kokoro",
+    "voice": "af_heart",
+    "speed": 1.0,
+    "sampleRate": 48000,
+    "channels": 2,
+    
+    "style": {
+      "natural": true,
+      "clear": true,
+      "expressive": true,
+      "noLongSilences": true,
+      "pace": "dynamic"
+    }
+  },
+  
+  "music": {
+    "enabled": true,
+    "style": "suspense-spatial",
+    "ducking": {
+      "enabled": true,
+      "musicLevel": -3, // dB under voice
+      "voiceLevel": 0 // unchanged
+    },
+    "fadeInOut": {
+      "enabled": true,
+      "duration": 1 // seconds
+    }
+  },
+  
+  "soundEffects": {
+    "enabled": true,
+    "style": "subtle",
+    "categories": {
+      "ambient": true,
+      "transitions": true,
+      "impacts": false
+    }
+  },
+  
+  "mixing": {
+    "order": "music-sfx-voice",
+    "voicePriority": true,
+    "peakNormalization": true,
+    "loudnessTarget": "-16 LUFS"
+  }
+}

@@ -1,0 +1,94 @@
+{
+  "name": "projection-mapping-style",
+  "version": "1.0.0",
+  "description": "Visual style for projection mapping educational shorts",
+  
+  "renderer": {
+    "resolution": "1080x1920",
+    "aspectRatio": "9:16",
+    "fps": 30,
+    "duration": 30,
+    "totalFrames": 900
+  },
+  
+  "colorPalette": {
+    "primary": "#FF6B6B",
+    "secondary": "#4ECDC4",
+    "accent": "#FFE66D",
+    "background": "#2C3E50",
+    "onPrimary": "#FFFFFF",
+    "onSecondary": "#FFFFFF",
+    "onAccent": "#000000",
+    "onBackground": "#FFFFFF"
+  },
+  
+  "lighting": {
+    "keyColor": "#FF6B6B",
+    "fillColor": "#4ECDC4",
+    "rimColor": "#FFE66D",
+    "ambientColor": "#2C3E50",
+    "keyIntensity": 0.8,
+    "fillIntensity": 0.4,
+    "rimIntensity": 0.5,
+    "ambientIntensity": 0.3
+  },
+  
+  "outlines": {
+    "enabled": true,
+    "width": 2, // pixels at 1080p
+    "color": "#000000",
+    "technique": "depth-based", // depth-based, normal-based, edge-detection
+    "fadeDistance": 50 // pixels
+  },
+  
+  "characters": {
+    "style": "illustrated-2d",
+    "heightHeads": 3.5,
+    "lineColor": "#030303",
+    "lineWidthNear": 5.1, // at 1080p
+    "lineWidthFar": 3.3, // at 1080p
+    "beakEyes": false,
+    "eyeSpacing": 0.26,
+    "noBlush": true,
+    "noEyeHighlights": true,
+    "faceBrightness": 0.93
+  },
+  
+  "camera": {
+    "defaultFov": 45,
+    "minDistance": 5,
+    "maxDistance": 20,
+    "smoothMoveFrames": 20,
+    "acceleration": "smootherstep",
+    "rollRange": "4-5 degrees",
+    "foregroundPropsRatio": 0.33
+  },
+  
+  "microanimations": {
+    "characterBlinkRange": "0.5-2.3 seconds",
+    "characterBlinkDuration": "4 frames",
+    "characterLeanRange": "1-7 degrees",
+    "characterBobRange": "3-7 percent",
+    "propSwayRange": "0-2 percent",
+    "foregroundProps": true
+  },
+  
+  "postProcessing": {
+    "inkPass": true,
+    "lensBlur": true,
+    "bloom": {
+      "threshold": 1.0,
+      "intensity": 0.5,
+      "radius": 0.6,
+      "levels": 6
+    },
+    "grade": {
+      "mode": "NEUTRAL",
+      "msaa": 4
+    },
+    "filmGrain": {
+      "enabled": false,
+      "percentage": 2.5
+    }
+  }
+}

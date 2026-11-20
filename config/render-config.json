@@ -1,0 +1,80 @@
+{
+  "name": "projection-mapping-render",
+  "version": "1.0.0",
+  "description": "Render configuration for projection mapping educational shorts",
+  
+  "target": {
+    "resolution": "1080x1920",
+    "aspectRatio": "9:16",
+    "fps": 30,
+    "duration": 30,
+    "totalFrames": 900
+  },
+  
+  "output": {
+    "format": "mp4",
+    "codec": "h264",
+    "crf": 18,
+    "pixelFormat": "yuv420p",
+    "audioCodec": "aac",
+    "audioBitrate": "192k",
+    "audioSampleRate": 48000,
+    "audioChannels": 2
+  },
+  
+  "hardware": {
+    "gpu": "AMD Radeon RX 580 8GB",
+    "cpu": "Intel Xeon E5-2680 v4 14-core/28-thread",
+    "ram": "16 GB DDR4",
+    "storage": "SSD 477 GB",
+    
+    "amdAmfAvailable": true,
+    "maxConcurrentChromium": 1,
+    "maxConcurrentFfmpeg": 1
+  },
+  
+  "performance": {
+    "blockFrameSize": 30,
+    "frameBlockPause": false,
+    "cacheTextures": true,
+    "reuseMaterials": true,
+    "precomputeShadows": true
+  },
+  
+  "postProcessing": {
+    "tonemap": "NEUTRAL",
+    "msaa": 4,
+    "filmGrain": {
+      "enabled": false,
+      "percentage": 0
+    },
+    "dof": {
+      "enabled": true,
+      "circleOfConfusion": "10-16 px at 1080p",
+      "focusStrategy": "on eyes of front row"
+    },
+    "bloom": {
+      "enabled": true,
+      "threshold": 1.0,
+      "intensity": 0.5,
+      "radius": 0.6,
+      "levels": 6
+    },
+    "inkPass": {
+      "enabled": true,
+      "order": "before lens pre main post"
+    }
+  },
+  
+  "delivery": {
+    "muxCommand": "-map 0:v:0 -map 1:a:0",
+    "verifyChecks": [
+      "noBlackFrames",
+      "noWhiteFrames",
+      "noFrozenFrames",
+      "noPopFrames",
+      "loudnessRange",
+      "subtitleSheets"
+    ]
+  }
+}
